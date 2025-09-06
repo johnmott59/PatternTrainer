@@ -9,7 +9,6 @@ using System.Diagnostics.Eventing.Reader;
 
 namespace CandlePatternML
 {
-
     public partial class Program
     {
         public ThreeBarResult DoThreeBarRun(MLEngineWrapper mlEngine,GetCandleModel model)

@@ -61,7 +61,7 @@ namespace CandlePatternML
             {
                 Console.WriteLine($"Confidence: {r.Confidence:P1}");
             }
-
+            // write this to the google sheet
         }
         static void Main(string[] args)
         {
