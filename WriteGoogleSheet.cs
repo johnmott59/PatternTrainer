@@ -3,6 +3,7 @@ using Google.Apis.Services;
 using Google.Apis.Sheets.v4;
 using Google.Apis.Sheets.v4.Data;
 using Google.Apis.Util.Store;
+using System.Configuration;
 
 namespace CandlePatternML
 {
@@ -14,7 +15,7 @@ namespace CandlePatternML
 
     public partial class Program
     {
-        private const string SpreadsheetId = "1gnkMIbxJN6EVEO18Yj9-4KPrX7MV2qXl7X5KGi4P6o8";
+        private string SpreadsheetId = ConfigurationManager.AppSettings["spreadsheetid"] ?? "NotFound";
         private const string SheetName = "Sheet1";
         private static readonly string[] Scopes = { SheetsService.Scope.Spreadsheets };
 

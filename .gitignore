@@ -14,3 +14,4 @@ obj/
 credentials.json
 **/token-store/
 /WorkSheetExample.cs
+App.Config
