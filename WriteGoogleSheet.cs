@@ -15,7 +15,7 @@ namespace CandlePatternML
 
     public partial class Program
     {
-        private string SpreadsheetId = ConfigurationManager.AppSettings["spreadsheetid"] ?? "NotFound";
+        private static string SpreadsheetId = ConfigurationManager.AppSettings["spreadsheetid"] ?? "NotFound";
         private const string SheetName = "Sheet1";
         private static readonly string[] Scopes = { SheetsService.Scope.Spreadsheets };
 
