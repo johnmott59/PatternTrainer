@@ -12,31 +12,65 @@ namespace CandlePatternML
 
     public partial class Program
     {
-        public void DoThreeBarRun(GetCandleModel model)
+        public ThreeBarResult DoThreeBarRun(MLEngineWrapper mlEngine,GetCandleModel model)
         {
-            // 1. Create MLContext
-            var mlContext = new MLContext(seed: 1);
+            // get the last 4 days of candles. We need 3 bars for the pattern
+            // and one day prior to see if there is a gap
 
-            // load the model from a file
-            ITransformer loadedModel;
-            DataViewSchema modelSchema;
+            int length = model.candles.Length;
+            List<Candle> PatternCandles = model.candles.Skip(length - 4).ToList();
 
-            using (var fileStream = new FileStream("c:\\work\\ThreeBarModel.zip", FileMode.Open, FileAccess.Read, FileShare.Read))
-            {
-                loadedModel = mlContext.Model.Load(fileStream, out modelSchema);
-            }
-
-            // create a prediction engine
-            var predictionEngine = mlContext.Model.CreatePredictionEngine<ThreeBarPatternModel, CandlePatternOutput>(loadedModel);
+            // do we have a gap?
+            if (PatternCandles[1].open <= PatternCandles[0].close) return new ThreeBarResult(model.symbol,false, 0);
+            // did the close of today fill the gap?
+            if (PatternCandles[1].close <= PatternCandles[0].close) return new ThreeBarResult(model.symbol,false, 0);
 
             List<ThreeBarPatternModel> patternModelList = new List<ThreeBarPatternModel>();
             List<DateTime> dtList = new List<DateTime>();
             List<CandlePatternOutput> outputList = new List<CandlePatternOutput>();
-           
-            for (int i=1; i < model.candles.Count() - 4; i++)
+
+            Console.WriteLine($"found gap at  {PatternCandles[1].dtDotNet.ToShortDateString()}");
+            ThreeBarPatternModel input = new ThreeBarPatternModel
             {
+                GapBarLowHigh = new LowHighModel(PatternCandles[1].low, PatternCandles[1].high),
+                GapCandle = PatternCandles[1],
+
+                Hold1BarLowHigh = new LowHighModel(PatternCandles[2].low, PatternCandles[2].high),
+                Hold1Candle = PatternCandles[2],
+
+                Hold2BarLowHigh = new LowHighModel(PatternCandles[3].low, PatternCandles[3].high),
+                Hold2Candle = PatternCandles[3],
+
+            };
+            // add in extra features that emphasize some aspects of the pattern
+            input.SetExtraFeatures();
+            // run the prediction
+            var result = mlEngine.predictionEngine.Predict(input);
+
+            Console.WriteLine($"Prediction for {model.symbol} : {(result.IsMatch ? "MATCH" : "NO MATCH")}, Probability: {result.Probability:P1}");
+
+            if (result.IsMatch)
+            {
+                patternModelList.Add(input);
+                dtList.Add(PatternCandles[1].dtDotNet);
+                outputList.Add(result);
+
+                ThreeBarSvgReporter.WriteSvgHtml($"c:\\work\\3bar_{model.symbol}.html", patternModelList, dtList, outputList);
+
+            }
+
+
+
+            return new ThreeBarResult(model.symbol,result.IsMatch, result.Probability);
+#if false
+
+            for (int i=1; i < model.candles.Count() - 2; i++)
+            {
+                Console.WriteLine($"Processing date {model.candles[i].dtDotNet}");
                 // do we have a gap?
                 if (model.candles[i].open <= model.candles[i - 1].close) continue;
+                // did the close of today fill the gap?
+                if (model.candles[i].close <= model.candles[i - 1].close) continue;
 
                 // this is a gap
                 Console.WriteLine($"found gap at  {model.candles[i].dtDotNet.ToShortDateString()}");
@@ -56,8 +90,9 @@ namespace CandlePatternML
                 input.SetExtraFeatures();
 
                 // run the prediction
-                var result = predictionEngine.Predict(input);
+                var result = mlEngine.predictionEngine.Predict(input);
 
+#if false
                 List<(double, double)> bars = new List<(double, double)>
                 {
                     (input.GapBarLowHigh.Low, input.GapBarLowHigh.High),
@@ -65,6 +100,7 @@ namespace CandlePatternML
                     (input.Hold2Low, input.Hold2High),
                 };
 
+                // this is a double check on the pattern to make sure it is valid
                 if (!GenerateTraining.CheckThreeBarPattern(bars, GenerateTraining.DefaultSlippagePercent, out string reason))
                 {
                  //   Console.WriteLine($"Skipping index {i} due to invalid pattern: {reason}");
@@ -73,6 +109,7 @@ namespace CandlePatternML
                 {
                     Console.WriteLine($"Valid pattern at index {i}: {reason}");
                 }
+#endif
 
                 Console.WriteLine($"Prediction for index {i}: {(result.IsMatch ? "MATCH" : "NO MATCH")}, Probability: {result.Probability:P1}");
 
@@ -83,8 +120,7 @@ namespace CandlePatternML
                     outputList.Add(result);
                 }
             }
-
-            ThreeBarSvgReporter.WriteSvgHtml("c:\\work\\3bar.html",patternModelList,dtList, outputList);
+#endif
 
         }
     }

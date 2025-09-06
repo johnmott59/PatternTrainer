@@ -1,1 +1,16 @@
 .vs/
+bin/
+obj/
+/bin
+/obj
+/.vs
+/bin/Debug/net8.0-windows7.0/PatternTrainer.dll
+/bin/Debug/net8.0-windows7.0/PatternTrainer.exe
+/bin/Debug/net8.0-windows7.0/PatternTrainer.pdb
+/obj/Debug/net8.0-windows7.0/ref/PatternTrainer.dll
+/obj/Debug/net8.0-windows7.0/refint/PatternTrainer.dll
+/bin/Debug/net8.0-windows7.0/SchwabLib.dll
+/bin/Debug/net8.0-windows7.0/SchwabLib.pdb
+credentials.json
+**/token-store/
+/WorkSheetExample.cs

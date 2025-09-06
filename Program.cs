@@ -5,28 +5,54 @@ using SchwabLib;
 using SchwabLib.Models;
 using System;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 
 
 namespace CandlePatternML
 {
+    public class ThreeBarResult
+    {
+        public ThreeBarResult(string ticker,bool success, float confidence)
+        {
+            Ticker = ticker;
+            Success = success;
+            Confidence = confidence;
+        }
+
+        public string Ticker { get; set; }
+        public bool Success { get; set; }
+        public float Confidence { get; set; }
+    }
 
     public partial class Program
     {
+        static List<string> Tickers = new List<string> {"CYTK","AAPL","AMD","AMZN","ARM","AVGO",
+            "COIN","CRWD","GOOGL","ISRG","HOOD","LLY","META","MSFT","MSTR","NFLX","NVDA",
+            "PLTR","TSLA","QQQ","SPY" };
+
+
         APIWrapper oAPIWrapper = new APIWrapper();
-        public void Run()
+        public async Task Run()
         {
 
             string authKey = GetAuthKey();
 
-            GetCandleModel model = oAPIWrapper.GetCandles(authKey, "AAPL", DateTime.Now.AddDays(-180), DateTime.Now, APIWrapper.eCandleTime.Daily);
+            MLEngineWrapper mlEngine = new MLEngineWrapper();
+            List<ThreeBarResult> resultlist = new List<ThreeBarResult>();
 
-           // decimal min = model.candles.Min(m => m.low);
-           // decimal max = model.candles.Max(m => m.high);
+            foreach (var  v in Tickers)
+            {
+                GetCandleModel model = oAPIWrapper.GetCandles(authKey, v, DateTime.Today.AddDays(-10), DateTime.Today, APIWrapper.eCandleTime.Daily);
+                ThreeBarResult result = DoThreeBarRun(mlEngine, model);
 
-            DoThreeBarTraining();
+                if (result.Success) resultlist.Add(result);
+            }
 
-            DoThreeBarRun(model);
-
+            Console.WriteLine("Three Bar Pattern Results:");
+            foreach (var r in resultlist.Where(m=>m.Success))
+            {
+                Console.WriteLine($"Confidence: {r.Confidence:P1}");
+            }
 
         }
         static void Main(string[] args)
