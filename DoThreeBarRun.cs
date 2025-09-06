@@ -25,9 +25,18 @@ namespace CandlePatternML
             // did the close of today fill the gap?
             if (PatternCandles[1].close <= PatternCandles[0].close) return new ThreeBarResult(model.symbol,false, 0);
 
+            // check to see if the body of candle 3 is below the body of candles 1 and 2
+            BodyOfCandle b1 = new BodyOfCandle(PatternCandles[1]);
+            BodyOfCandle b2 = new BodyOfCandle(PatternCandles[2]);
+            BodyOfCandle b3 = new BodyOfCandle(PatternCandles[3]);
+
+            if(b3 < b2 && b3 < b1) return new ThreeBarResult(model.symbol, false, 0);
+#if false
+// use for graphing the patterns
             List<ThreeBarPatternModel> patternModelList = new List<ThreeBarPatternModel>();
             List<DateTime> dtList = new List<DateTime>();
             List<CandlePatternOutput> outputList = new List<CandlePatternOutput>();
+#endif
 
             Console.WriteLine($"found gap at  {PatternCandles[1].dtDotNet.ToShortDateString()}");
             ThreeBarPatternModel input = new ThreeBarPatternModel
@@ -49,6 +58,8 @@ namespace CandlePatternML
 
             Console.WriteLine($"Prediction for {model.symbol} : {(result.IsMatch ? "MATCH" : "NO MATCH")}, Probability: {result.Probability:P1}");
 
+#if false
+// graph the successful patterns
             if (result.IsMatch)
             {
                 patternModelList.Add(input);
@@ -56,72 +67,10 @@ namespace CandlePatternML
                 outputList.Add(result);
 
                 ThreeBarSvgReporter.WriteSvgHtml($"c:\\work\\3bar_{model.symbol}.html", patternModelList, dtList, outputList);
-
             }
-
-
+#endif
 
             return new ThreeBarResult(model.symbol,result.IsMatch, result.Probability);
-#if false
-
-            for (int i=1; i < model.candles.Count() - 2; i++)
-            {
-                Console.WriteLine($"Processing date {model.candles[i].dtDotNet}");
-                // do we have a gap?
-                if (model.candles[i].open <= model.candles[i - 1].close) continue;
-                // did the close of today fill the gap?
-                if (model.candles[i].close <= model.candles[i - 1].close) continue;
-
-                // this is a gap
-                Console.WriteLine($"found gap at  {model.candles[i].dtDotNet.ToShortDateString()}");
-                ThreeBarPatternModel input = new ThreeBarPatternModel
-                {
-                    GapBarLowHigh = new LowHighModel(model.candles[i].low, model.candles[i].high),
-                    GapCandle = model.candles[i],
-                   
-                    Hold1BarLowHigh = new LowHighModel(model.candles[i + 1].low, model.candles[i + 1].high),
-                    Hold1Candle = model.candles[i + 1],
-
-                    Hold2BarLowHigh = new LowHighModel(model.candles[i + 2].low, model.candles[i + 2].high),
-                    Hold2Candle = model.candles[i + 2],
-
-                };
-                // add in extra features that emphasize some aspects of the pattern
-                input.SetExtraFeatures();
-
-                // run the prediction
-                var result = mlEngine.predictionEngine.Predict(input);
-
-#if false
-                List<(double, double)> bars = new List<(double, double)>
-                {
-                    (input.GapBarLowHigh.Low, input.GapBarLowHigh.High),
-                    (input.Hold1BarLowHigh.Low, input.Hold1BarLowHigh.High),
-                    (input.Hold2Low, input.Hold2High),
-                };
-
-                // this is a double check on the pattern to make sure it is valid
-                if (!GenerateTraining.CheckThreeBarPattern(bars, GenerateTraining.DefaultSlippagePercent, out string reason))
-                {
-                 //   Console.WriteLine($"Skipping index {i} due to invalid pattern: {reason}");
-               //     continue;
-                } else
-                {
-                    Console.WriteLine($"Valid pattern at index {i}: {reason}");
-                }
-#endif
-
-                Console.WriteLine($"Prediction for index {i}: {(result.IsMatch ? "MATCH" : "NO MATCH")}, Probability: {result.Probability:P1}");
-
-                if (result.IsMatch)
-                {
-                    patternModelList.Add(input);
-                    dtList.Add(model.candles[i].dtDotNet);
-                    outputList.Add(result);
-                }
-            }
-#endif
-
         }
     }
 }

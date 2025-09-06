@@ -26,7 +26,7 @@ namespace CandlePatternML
 
     public partial class Program
     {
-        static List<string> Tickers = new List<string> {"CYTK","AAPL","AMD","AMZN","ARM","AVGO",
+        static List<string> Tickers = new List<string> {"AAPL","AMD","AMZN","ARM","AVGO",
             "COIN","CRWD","GOOGL","ISRG","HOOD","LLY","META","MSFT","MSTR","NFLX","NVDA",
             "PLTR","TSLA","QQQ","SPY" };
 
@@ -40,9 +40,17 @@ namespace CandlePatternML
             MLEngineWrapper mlEngine = new MLEngineWrapper();
             List<ThreeBarResult> resultlist = new List<ThreeBarResult>();
 
-            foreach (var  v in Tickers)
+            foreach (var v in Tickers)
             {
-                GetCandleModel model = oAPIWrapper.GetCandles(authKey, v, DateTime.Today.AddDays(-10), DateTime.Today, APIWrapper.eCandleTime.Daily);
+                GetCandleModel model;
+                try
+                {
+                    model = oAPIWrapper.GetCandles(authKey, v, new DateTime(2025,8,25), new DateTime(2025,9,2),/* DateTime.Today.AddDays(-10), DateTime.Today,*/ APIWrapper.eCandleTime.Daily);
+                } catch (Exception ex)
+                {
+                    Console.WriteLine($"Error retrieving data for {v}: {ex.Message}");
+                    continue;
+                }
                 ThreeBarResult result = DoThreeBarRun(mlEngine, model);
 
                 if (result.Success) resultlist.Add(result);
