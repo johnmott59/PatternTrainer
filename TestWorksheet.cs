@@ -5,7 +5,7 @@ using SchwabLib;
 using SchwabLib.Models;
 using System;
 using System.Collections.Generic;
-
+using System.Configuration;
 
 namespace CandlePatternML
 {
@@ -15,7 +15,7 @@ namespace CandlePatternML
         public void TestWorkSheet()
         {
             var googleSync = new WorkSheetGoogleSync(
-         spreadsheetId: "1gnkMIbxJN6EVEO18Yj9-4KPrX7MV2qXl7X5KGi4P6o8",
+         spreadsheetId: ConfigurationManager.AppSettings["spreadsheetid"],
          credentialsPath: "C:\\Users\\johnm\\source\\repos\\MLPatterns\\PatternTrainer\\credentials.json"
      );
 
@@ -23,7 +23,7 @@ namespace CandlePatternML
             var worksheet = new WorkSheet("Sheet1");
             worksheet.CreateColumn("Symbol");
             worksheet.CreateColumn("Price");
-            worksheet.SetValue(0, "A", "AAPL");
+            worksheet.SetValue(0, "A", "AMZN");
             worksheet.SetValue(0, "B", 189.55);
 
             // Synchronize to Google Sheets

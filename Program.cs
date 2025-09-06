@@ -66,6 +66,11 @@ namespace CandlePatternML
         static void Main(string[] args)
         {
             Program p = new Program();
+
+            p.TestWorkSheet();
+
+        
+
             p.Run();
 
             //  p.SearchForCompression();
