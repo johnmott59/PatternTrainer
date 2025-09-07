@@ -45,7 +45,7 @@ namespace CandlePatternML
                 GetCandleModel model;
                 try
                 {
-                    model = oAPIWrapper.GetCandles(authKey, v, new DateTime(2025,8,25), new DateTime(2025,9,2),/* DateTime.Today.AddDays(-10), DateTime.Today,*/ APIWrapper.eCandleTime.Daily);
+                    model = oAPIWrapper.GetCandles(authKey, v, DateTime.Today.AddDays(-10), DateTime.Today, APIWrapper.eCandleTime.Daily);
                 } catch (Exception ex)
                 {
                     Console.WriteLine($"Error retrieving data for {v}: {ex.Message}");
@@ -53,7 +53,7 @@ namespace CandlePatternML
                 }
                 ThreeBarResult result = DoThreeBarRun(mlEngine, model);
 
-                if (result.Success) resultlist.Add(result);
+                 resultlist.Add(result);
             }
 
             Console.WriteLine("Three Bar Pattern Results:");
@@ -61,15 +61,13 @@ namespace CandlePatternML
             {
                 Console.WriteLine($"Confidence: {r.Confidence:P1}");
             }
+
+            WriteWorkSheet(resultlist);
             // write this to the google sheet
         }
         static void Main(string[] args)
         {
             Program p = new Program();
-
-            p.TestWorkSheet();
-
-        
 
             p.Run();
 
