@@ -1,5 +1,4 @@
-﻿using SchwabLib;
-using SchwabLib.Models;
+﻿using SchwabLib.Models;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
@@ -10,21 +9,10 @@ using System.Windows.Input.Manipulations;
 
 namespace CandlePatternML
 {
-
-    public partial class GenerateTraining
+    public partial class GenerateTrainingData
     {
-        private double RandomDouble(double min, double max)
-        {
-            return rand.NextDouble() * (max - min) + min;
-        }
-
-
-    
-      
-  
-
- 
         /// <summary>
+        /// This an optional debugging routine to validate that a 3-bar pattern meets the criteria.
         /// bars[0] = gap bar (high, low). bars[1], bars[2] = holding bars.
         /// Returns true if both holding bars stay within [gapLow - pct*range, gapHigh + pct*range].
         /// </summary>
@@ -38,7 +26,7 @@ namespace CandlePatternML
             // Validate highs/lows ordering
             for (int i = 0; i < bars.Count; i++)
             {
-                var (l,h) = bars[i];
+                var (l, h) = bars[i];
                 if (double.IsNaN(h) || double.IsNaN(l) || double.IsInfinity(h) || double.IsInfinity(l))
                 {
                     reason = $"Bar {i} has NaN/Infinity.";
@@ -52,7 +40,7 @@ namespace CandlePatternML
             }
 
             // 2) Gap bar defines the base range
-            var (gapLow,gapHigh) = bars[0];
+            var (gapLow, gapHigh) = bars[0];
             double gapRange = gapHigh - gapLow;
             if (gapRange <= 0)
             {
@@ -75,7 +63,7 @@ namespace CandlePatternML
             // 4) Validate holding bars
             for (int i = 1; i <= 2; i++)
             {
-                var (l,h) = bars[i];
+                var (l, h) = bars[i];
                 if (l < allowedLower || h > allowedUpper)
                 {
                     reason = $"Bar {i} violates bounds. Allowed [{allowedLower}, {allowedUpper}], got low={l}, high={h}.";
@@ -86,6 +74,4 @@ namespace CandlePatternML
             return true;
         }
     }
-
-
 }

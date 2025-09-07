@@ -9,13 +9,13 @@ using System.Windows.Input.Manipulations;
 
 namespace CandlePatternML
 {
-    public partial class GenerateTraining
+    public partial class GenerateTrainingData
     {
         private LowHighModel GenerateValidBar()
         {
 
             // get a lower value
-            double lowerValue = RandomDouble(validLowerBound, validUpperBound);
+            double lowerValue = GetRandomDouble(validLowerBound, validUpperBound);
 
             // the lower value needs to be less than the upper bound minus the minimum bar size
             if (lowerValue >= validUpperBound - minBarSize)
@@ -23,7 +23,7 @@ namespace CandlePatternML
                 lowerValue = validUpperBound - minBarSize;
             }
             // now get a higher value   
-            double highervalue = RandomDouble(lowerValue, validUpperBound);
+            double highervalue = GetRandomDouble(lowerValue, validUpperBound);
 
             return new LowHighModel(lowerValue, highervalue);
         }

@@ -9,15 +9,11 @@ using System.Windows.Input.Manipulations;
 
 namespace CandlePatternML
 {
-    public partial class GenerateTraining
+    public partial class GenerateTrainingData
     {
-        private void ShuffleBars<T>(IList<T> list)
+        public ThreeBarPatternModel GetPattern()
         {
-            for (int i = list.Count - 1; i > 0; i--)
-            {
-                int j = rand.Next(i + 1);
-                (list[i], list[j]) = (list[j], list[i]);
-            }
+            return ThreeBarPatternModel.GetPattern(barList, this.pass);
         }
     }
 }

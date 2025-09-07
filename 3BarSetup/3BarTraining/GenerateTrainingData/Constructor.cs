@@ -9,9 +9,9 @@ using System.Windows.Input.Manipulations;
 
 namespace CandlePatternML
 {
-    public partial class GenerateTraining
+    public partial class GenerateTrainingData
     {
-        public GenerateTraining(int length,
+        public GenerateTrainingData(int length,
     bool pass,
     decimal minPrice,
     decimal maxPrice,
@@ -30,8 +30,8 @@ namespace CandlePatternML
             // 🔹 1. Create the gap bar
             // gapBarLow = RandomDouble(30, 300);
             // get a price within the range of minPrice and maxPrice
-            gapBarLow = RandomDouble((double)minPrice, (double)maxPrice);
-            gapBarSize = RandomDouble(0.5, 20);
+            gapBarLow = GetRandomDouble((double)minPrice, (double)maxPrice);
+            gapBarSize = GetRandomDouble(0.5, 20);
             gapBarHigh = gapBarLow + gapBarSize;
 
             // add this bar

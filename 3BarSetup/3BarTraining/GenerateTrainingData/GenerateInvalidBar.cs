@@ -9,7 +9,7 @@ using System.Windows.Input.Manipulations;
 
 namespace CandlePatternML
 {
-    public partial class GenerateTraining
+    public partial class GenerateTrainingData
     {
         private LowHighModel GenerateInvalidBar()
         {
@@ -27,27 +27,27 @@ namespace CandlePatternML
             {
                 case 0: // fully above
                     low = validUpperBound + margin;
-                    high = low + RandomDouble(range * 0.5, range); // taller bar
+                    high = low + GetRandomDouble(range * 0.5, range); // taller bar
                     break;
 
                 case 1: // fully below
                     high = validLowerBound - margin;
-                    low = high - RandomDouble(range * 0.5, range);
+                    low = high - GetRandomDouble(range * 0.5, range);
                     break;
 
                 case 2: // straddle lower bound
-                    low = validLowerBound - RandomDouble(range * 0.5, range);
-                    high = validLowerBound + RandomDouble(margin, range * 0.5);
+                    low = validLowerBound - GetRandomDouble(range * 0.5, range);
+                    high = validLowerBound + GetRandomDouble(margin, range * 0.5);
                     break;
 
                 case 3: // straddle upper bound
-                    low = validUpperBound - RandomDouble(range * 0.5, margin);
-                    high = validUpperBound + RandomDouble(margin, range * 0.5);
+                    low = validUpperBound - GetRandomDouble(range * 0.5, margin);
+                    high = validUpperBound + GetRandomDouble(margin, range * 0.5);
                     break;
 
                 case 4: // fully spans both
-                    low = validLowerBound - RandomDouble(range * 0.5, range);
-                    high = validUpperBound + RandomDouble(range * 0.5, range);
+                    low = validLowerBound - GetRandomDouble(range * 0.5, range);
+                    high = validUpperBound + GetRandomDouble(range * 0.5, range);
                     break;
 
                 default:

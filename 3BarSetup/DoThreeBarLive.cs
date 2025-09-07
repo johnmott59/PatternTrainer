@@ -11,7 +11,7 @@ namespace CandlePatternML
 {
     public partial class Program
     {
-        public ThreeBarResult DoThreeBarRun(MLEngineWrapper mlEngine,GetCandleModel model)
+        public ThreeBarResult DoThreeBarLive(MLEngineWrapper mlEngine,GetCandleModel model)
         {
             // get the last 4 days of candles. We need 3 bars for the pattern
             // and one day prior to see if there is a gap

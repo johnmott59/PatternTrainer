@@ -23,7 +23,7 @@ namespace CandlePatternML
             bool valid = true;
             for (int i = 0; i < 20000; i++,valid = !valid) { 
 
-                GenerateTraining p = new GenerateTraining(3, valid,minPrice,maxPrice,MinOverlap);
+                GenerateTrainingData p = new GenerateTrainingData(3, valid,minPrice,maxPrice,MinOverlap);
 
                 trainingData.Add(p.GetPattern());
 
