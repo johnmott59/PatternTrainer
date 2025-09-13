@@ -25,9 +25,9 @@ namespace CandlePatternML
             if (PatternCandles[1].close <= PatternCandles[0].close) return new ThreeBarResult(model.symbol,false, 0);
 
             // check to see if the body of candle 3 is below the body of candles 1 and 2
-            BodyOfCandle b1 = new BodyOfCandle(PatternCandles[1]);
-            BodyOfCandle b2 = new BodyOfCandle(PatternCandles[2]);
-            BodyOfCandle b3 = new BodyOfCandle(PatternCandles[3]);
+            BodyOfCandleModel b1 = new BodyOfCandleModel(PatternCandles[1]);
+            BodyOfCandleModel b2 = new BodyOfCandleModel(PatternCandles[2]);
+            BodyOfCandleModel b3 = new BodyOfCandleModel(PatternCandles[3]);
 
             if(b3 < b2 && b3 < b1) return new ThreeBarResult(model.symbol, false, 0);
 #if false

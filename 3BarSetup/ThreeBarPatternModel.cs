@@ -7,30 +7,7 @@ using System.Collections.Generic;
 
 namespace CandlePatternML
 {
-    public class LowHighModel
-    {
-        public float Low { get; set; }
-        public float High { get; set; }
-
-        public LowHighModel(decimal low, decimal high)
-        {
-            Low = (float)low;
-            High = (float)high; 
-        }
-        public LowHighModel(double Low, double High)
-        {
-            this.Low = (float) Low;
-            this.High = (float) High;
-        }
-
-        public LowHighModel(float Low, float High)
-        {
-            this.Low = Low;
-            this.High = High;
-        }
-        // basic sanity check
-        public bool Valid {get{ return Low > 0 && High > 0 && Low < High; }}
-    }
+   
     public class ThreeBarPatternModel
     {
         [NoColumn]
@@ -139,7 +116,7 @@ namespace CandlePatternML
 
         }
         public bool Label { get; set; }
-
+#if false
         public static ThreeBarPatternModel GetPattern(List<LowHighModel> bars, bool valid)
         {
             ThreeBarPatternModel pattern = new ThreeBarPatternModel()
@@ -164,6 +141,7 @@ namespace CandlePatternML
 
             return pattern;
         }
+#endif
 
         /// <summary>
         /// Calculates the overlap ratio of multiple ranges.

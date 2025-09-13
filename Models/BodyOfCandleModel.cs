@@ -10,11 +10,11 @@ using System.Collections.Generic;
 namespace CandlePatternML
 {
 
-    public sealed class BodyOfCandle
+    public sealed class BodyOfCandleModel
     {
         public Candle Candle { get; }
 
-        public BodyOfCandle(Candle candle)
+        public BodyOfCandleModel(Candle candle)
         {
             Candle = candle ?? throw new ArgumentNullException(nameof(candle));
         }
@@ -22,14 +22,14 @@ namespace CandlePatternML
         private decimal BodyMin => Math.Min(Candle.open, Candle.close);
         private decimal BodyMax => Math.Max(Candle.open, Candle.close);
 
-        public static bool operator <(BodyOfCandle left, BodyOfCandle right)
+        public static bool operator <(BodyOfCandleModel left, BodyOfCandleModel right)
         {
             if (left is null) throw new ArgumentNullException(nameof(left));
             if (right is null) throw new ArgumentNullException(nameof(right));
             return left.BodyMax < right.BodyMin;
         }
 
-        public static bool operator >(BodyOfCandle left, BodyOfCandle right)
+        public static bool operator >(BodyOfCandleModel left, BodyOfCandleModel right)
         {
             if (left is null) throw new ArgumentNullException(nameof(left));
             if (right is null) throw new ArgumentNullException(nameof(right));
