@@ -34,19 +34,10 @@ namespace CandlePatternML
         public float Hold1Low { get { return Hold1BarLowHigh.Low; } }
         public float Hold1High { get { return Hold1BarLowHigh.High; } }
 
-        [NoColumn]
-        public Candle Hold2Candle { get; set; } // holding bar 2
-
-        [NoColumn]
-        public LowHighModel Hold2BarLowHigh { get; set; } // holding bar 2
-        public float Hold2Low { get { return Hold2BarLowHigh.Low; } }
-        public float Hold2High { get { return Hold2BarLowHigh.High; } }
 
         public float Hold1LowLessThanGapHigh { get; set; }
         public float Hold1HighMoreThanGapLow { get; set; }
 
-        public float Hold2LowLessThanGapHigh { get; set; }
-        public float Hold2HighMoreThanGapLow { get; set; }
 
 
         /// <summary>
@@ -60,8 +51,6 @@ namespace CandlePatternML
         {
             Hold1LowLessThanGapHigh = Hold1BarLowHigh.Low < GapBarLowHigh.High ? 1.0f : 0.0f;
             Hold1HighMoreThanGapLow = Hold1BarLowHigh.High > GapBarLowHigh.Low ? 1.0f : 0.0f;
-            Hold2LowLessThanGapHigh = Hold2Low < GapBarLowHigh.High ? 1.0f : 0.0f;
-            Hold2HighMoreThanGapLow = Hold2High > GapBarLowHigh.Low ? 1.0f : 0.0f;
         }
 
 #if false

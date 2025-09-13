@@ -18,14 +18,14 @@ namespace CandlePatternML
             // 1. Create MLContext
             var mlContext = new MLContext(seed: 1);
 
-            var trainingData = new List<ThreeBarPatternModel>();
+            var trainingData = new List<TwoBarPatternModel>();
 
             bool valid = true;
             for (int i = 0; i < 20000; i++,valid = !valid) { 
 
-                GenerateGapSetupTrainingData p = new GenerateGapSetupTrainingData(3, valid,minPrice,maxPrice);
+                GenerateGapSetupTrainingData p = new GenerateGapSetupTrainingData(2, valid,minPrice,maxPrice);
 
-                trainingData.Add(p.GetThreeBarPattern());
+                trainingData.Add(p.GetTwoBarPattern());
 
             }
 
@@ -36,16 +36,12 @@ namespace CandlePatternML
 
             // 4. Define training pipeline
             var pipeline = mlContext.Transforms.Concatenate("Features", 
-                        nameof(ThreeBarPatternModel.GapLow), 
-                        nameof(ThreeBarPatternModel.GapHigh),
-                        nameof(ThreeBarPatternModel.Hold1Low), 
-                        nameof(ThreeBarPatternModel.Hold1High),
-                        nameof(ThreeBarPatternModel.Hold2Low), 
-                        nameof(ThreeBarPatternModel.Hold2High),
-                        nameof(ThreeBarPatternModel.Hold1HighMoreThanGapLow),
-                        nameof(ThreeBarPatternModel.Hold1LowLessThanGapHigh),
-                        nameof(ThreeBarPatternModel.Hold2HighMoreThanGapLow),
-                        nameof(ThreeBarPatternModel.Hold2LowLessThanGapHigh)
+                        nameof(TwoBarPatternModel.GapLow), 
+                        nameof(TwoBarPatternModel.GapHigh),
+                        nameof(TwoBarPatternModel.Hold1Low), 
+                        nameof(TwoBarPatternModel.Hold1High),
+                        nameof(TwoBarPatternModel.Hold1HighMoreThanGapLow),
+                        nameof(TwoBarPatternModel.Hold1LowLessThanGapHigh)
                         )
                 .Append(mlContext.BinaryClassification.Trainers.FastTree(options));
 
@@ -55,7 +51,7 @@ namespace CandlePatternML
             Console.WriteLine("✅ Model training complete.");
 
             // save the model to a file
-            mlContext.Model.Save(model, trainingDataView.Schema, "c:\\work\\ThreeBarModel.zip");
+            mlContext.Model.Save(model, trainingDataView.Schema, "c:\\work\\TwoBarModel.zip");
 
          
         }
