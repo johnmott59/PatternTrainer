@@ -9,7 +9,7 @@ using System.Windows.Input.Manipulations;
 
 namespace CandlePatternML
 {
-    public partial class GenerateTrainingData
+    public partial class GenerateGapSetupTrainingData
     {
         /// <summary>
         /// This an optional debugging routine to validate that a 3-bar pattern meets the criteria.

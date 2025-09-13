@@ -9,7 +9,7 @@ using System.Windows.Input.Manipulations;
 
 namespace CandlePatternML
 {
-    public partial class GenerateTrainingData
+    public partial class GenerateGapSetupTrainingData
     {
         private double GetRandomDouble(double min, double max)
         {

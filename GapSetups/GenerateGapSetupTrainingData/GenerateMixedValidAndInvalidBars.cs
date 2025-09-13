@@ -9,7 +9,7 @@ using System.Windows.Input.Manipulations;
 
 namespace CandlePatternML
 {
-    public partial class GenerateTrainingData
+    public partial class GenerateGapSetupTrainingData
     {
         protected void GenerateMixedValidAndInvalidBars(int totalBars)
         {

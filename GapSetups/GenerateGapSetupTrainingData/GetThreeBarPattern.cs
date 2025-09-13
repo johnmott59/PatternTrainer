@@ -10,7 +10,7 @@ using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace CandlePatternML
 {
-    public partial class GenerateTrainingData
+    public partial class GenerateGapSetupTrainingData
     {
         public ThreeBarPatternModel GetThreeBarPattern()
         {

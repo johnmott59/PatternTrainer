@@ -9,7 +9,7 @@ using System.Windows.Input.Manipulations;
 
 namespace CandlePatternML
 {
-    public partial class GenerateTrainingData
+    public partial class GenerateGapSetupTrainingData
     {
         public const double DefaultSlippagePercent = .01;
 
