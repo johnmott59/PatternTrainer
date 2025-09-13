@@ -10,9 +10,9 @@ using System.Threading.Tasks;
 
 namespace CandlePatternML
 {
-    public class ThreeBarResult
+    public class MLResult
     {
-        public ThreeBarResult(string ticker,bool success, float confidence)
+        public MLResult(string ticker,bool success, float confidence)
         {
             Ticker = ticker;
             Success = success;
@@ -38,7 +38,7 @@ namespace CandlePatternML
             string authKey = GetAuthKey();
 
             MLEngineWrapper mlEngine = new MLEngineWrapper();
-            List<ThreeBarResult> resultlist = new List<ThreeBarResult>();
+            List<MLResult> resultlist3bar = new List<MLResult>();
 
             foreach (var v in Tickers)
             {
@@ -51,27 +51,29 @@ namespace CandlePatternML
                     Console.WriteLine($"Error retrieving data for {v}: {ex.Message}");
                     continue;
                 }
-                ThreeBarResult result = DoThreeBarLive(mlEngine, model);
+                MLResult result = DoThreeBarLive(mlEngine, model);
 
-                 resultlist.Add(result);
+                 resultlist3bar.Add(result);
             }
 
             Console.WriteLine("Three Bar Pattern Results:");
-            foreach (var r in resultlist.Where(m=>m.Success))
+            foreach (var r in resultlist3bar.Where(m=>m.Success))
             {
                 Console.WriteLine($"Confidence: {r.Confidence:P1}");
             }
 
-            WriteWorkSheet(resultlist);
+            WriteWorkSheet(resultlist3bar);
             // write this to the google sheet
         }
         static void Main(string[] args)
         {
             Program p = new Program();
 
-            p.Run();
+            //p.DoTwoBarTraining();
 
-            //  p.SearchForCompression();
+            p.Run().RunSynchronously();
+
+           
 
         }
     }

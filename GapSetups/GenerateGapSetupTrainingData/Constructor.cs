@@ -21,8 +21,8 @@ namespace CandlePatternML
 
             this.pass = pass; // true if this is a valid pattern
 
-            if (length != 3 && length != 4)
-                throw new ArgumentException("Length must be 3 or 4");
+            if (length < 2)
+                throw new ArgumentException("Length must be >= 2");
             /*
              * Create the gap bar
              */
@@ -61,7 +61,15 @@ namespace CandlePatternML
             }
             else
             {
-                GenerateMixedValidAndInvalidBars(length - 1);
+                // if the length is 2 make it an invalid bar, else mix
+                if (length == 2)
+                {
+                    barList.Add(GenerateInvalidBar());
+                }
+                else
+                {
+                    GenerateMixedValidAndInvalidBars(length - 1);
+                }
             }
 
         }

@@ -13,8 +13,9 @@ namespace CandlePatternML
     {
         protected void GenerateMixedValidAndInvalidBars(int totalBars)
         {
-            if (totalBars <= 0)
-                throw new ArgumentException("n must be >= 1");
+            // generate at least two bars, because we need at least one valid and one invalid
+            if (totalBars < 2)
+                throw new ArgumentException("n must be >= 2");
 
             int numInvalid = rand.Next(1, totalBars); // at least one invalid
 
