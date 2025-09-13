@@ -8,6 +8,13 @@ using System.Collections.Generic;
 namespace CandlePatternML
 {
    
+    /// <summary>
+    /// This model will be fed into the ML. It has properties that will be
+    /// referenced and properties that won't be referenced. it has to be flat,
+    /// not containing other objects. The properties that are ignored by ML are
+    /// marked by [NoColumn] and let us use this model to hold this data and 
+    /// do other work
+    /// </summary>
     public class ThreeBarPatternModel
     {
         [NoColumn]
@@ -57,12 +64,13 @@ namespace CandlePatternML
             Hold2HighMoreThanGapLow = Hold2High > GapBarLowHigh.Low ? 1.0f : 0.0f;
         }
 
+#if false
         // perform a quick validation. this doesn't replace the ML but is part of 
         // training and leargning
         public bool Validate(double slippagePercent, out string reason)
         {
             reason = "OK";
-#if false
+
             // Validate highs/lows ordering
             for (int i = 0; i < bars.Count; i++)
             {
@@ -110,11 +118,12 @@ namespace CandlePatternML
                     return false;
                 }
             }
-#endif
+
 
             return true;
 
         }
+#endif
         public bool Label { get; set; }
 #if false
         public static ThreeBarPatternModel GetPattern(List<LowHighModel> bars, bool valid)
@@ -141,7 +150,7 @@ namespace CandlePatternML
 
             return pattern;
         }
-#endif
+
 
         /// <summary>
         /// Calculates the overlap ratio of multiple ranges.
@@ -184,5 +193,7 @@ namespace CandlePatternML
             // Return overlap ratio
             return totalArea > 0 ? overlapArea / totalArea : 0.0;
         }
+
+#endif
     }
 }

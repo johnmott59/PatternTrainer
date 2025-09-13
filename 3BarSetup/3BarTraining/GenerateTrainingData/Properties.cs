@@ -29,8 +29,6 @@ namespace CandlePatternML
         protected double validLowerBound;
         protected double validUpperBound;
 
-        protected double Overlap { get; set; } // amount of overlap
-
         protected bool pass; // true if this is a valid pattern
     }
 }

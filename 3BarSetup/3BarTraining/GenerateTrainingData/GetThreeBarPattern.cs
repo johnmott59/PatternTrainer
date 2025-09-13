@@ -12,7 +12,7 @@ namespace CandlePatternML
 {
     public partial class GenerateTrainingData
     {
-        public ThreeBarPatternModel GetPattern()
+        public ThreeBarPatternModel GetThreeBarPattern()
         {
             ThreeBarPatternModel pattern = new ThreeBarPatternModel()
             {

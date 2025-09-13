@@ -12,7 +12,7 @@ namespace CandlePatternML
 
     public partial class Program
     {
-        public void DoThreeBarTraining(decimal minPrice=30,decimal maxPrice=300,double MinOverlap=.30)
+        public void DoThreeBarTraining(decimal minPrice=30,decimal maxPrice=300)
         {
             //// gapBarLow = RandomDouble(30, 300);
             // 1. Create MLContext
@@ -23,9 +23,9 @@ namespace CandlePatternML
             bool valid = true;
             for (int i = 0; i < 20000; i++,valid = !valid) { 
 
-                GenerateTrainingData p = new GenerateTrainingData(3, valid,minPrice,maxPrice,MinOverlap);
+                GenerateTrainingData p = new GenerateTrainingData(3, valid,minPrice,maxPrice);
 
-                trainingData.Add(p.GetPattern());
+                trainingData.Add(p.GetThreeBarPattern());
 
             }
 

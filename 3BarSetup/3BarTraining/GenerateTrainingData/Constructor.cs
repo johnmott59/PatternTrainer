@@ -15,12 +15,11 @@ namespace CandlePatternML
     bool pass,
     decimal minPrice,
     decimal maxPrice,
-    double overlap,
+   
     double slippagePercent = DefaultSlippagePercent)
         {
 
             this.pass = pass; // true if this is a valid pattern
-            this.Overlap = overlap; // amount of overlap
 
             if (length != 3 && length != 4)
                 throw new ArgumentException("Length must be 3 or 4");
@@ -28,7 +27,7 @@ namespace CandlePatternML
              * Create the gap bar
              */
             // 🔹 1. Create the gap bar
-            // gapBarLow = RandomDouble(30, 300);
+
             // get a price within the range of minPrice and maxPrice
             gapBarLow = GetRandomDouble((double)minPrice, (double)maxPrice);
             gapBarSize = GetRandomDouble(0.5, 20);
@@ -48,28 +47,16 @@ namespace CandlePatternML
             validLowerBound = gapBarLow - gapBarLow * slippagePercent;
             validUpperBound = gapBarHigh + gapBarLow * slippagePercent;
 
-            double overage = 0;
             if (pass)
             {
                 List<LowHighModel> tmpBarList = new List<LowHighModel>();
-                int attempts = 0; // to avoid infinite loops    
-                                  // do
-                                  // {
+
                 tmpBarList.Clear(); // clear the temporary list
                 for (int i = 0; i < length - 1; i++)
                 {
                     tmpBarList.Add(GenerateValidBar());
                 }
 
-                //  overage = ThreeBarPattern.FindOverlap(tmpBarList); // update the overlap value
-
-                attempts++;
-                //} while (true);// overage < Overlap);
-
-                //if (attempts > 100)
-                //{
-                //    Console.WriteLine("more than 100 attempts to generate valid bars, using last attempt");
-                //}
                 barList.AddRange(tmpBarList); // add the valid bars to the list
             }
             else

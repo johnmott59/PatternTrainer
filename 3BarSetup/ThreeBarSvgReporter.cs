@@ -8,6 +8,9 @@ using System.Text;
 
 namespace CandlePatternML
 {
+    /// <summary>
+    /// utility to write out a set of 3-bar patterns as SVG images in an HTML file.
+    /// </summary>
     public static class ThreeBarSvgReporter
     {
         public static void WriteSvgHtml(
