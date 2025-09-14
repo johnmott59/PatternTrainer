@@ -13,23 +13,17 @@ namespace CandlePatternML
     {
         public MLResult DoTwoBarLive(MLEngineWrapper mlEngine,GetCandleModel model)
         {
-            // get the last 4 days of candles. We need 3 bars for the pattern
+            // get the last 3 days of candles. We need 2 bars for the pattern
             // and one day prior to see if there is a gap
 
             int length = model.candles.Length;
-            List<Candle> PatternCandles = model.candles.Skip(length - 4).ToList();
+            List<Candle> PatternCandles = model.candles.Skip(length - 3).ToList();
 
             // do we have a gap?
             if (PatternCandles[1].open <= PatternCandles[0].close) return new MLResult(model.symbol,false, 0);
             // did the close of today fill the gap?
             if (PatternCandles[1].close <= PatternCandles[0].close) return new MLResult(model.symbol,false, 0);
 
-            // check to see if the body of candle 3 is below the body of candles 1 and 2
-            BodyOfCandleModel b1 = new BodyOfCandleModel(PatternCandles[1]);
-            BodyOfCandleModel b2 = new BodyOfCandleModel(PatternCandles[2]);
-            BodyOfCandleModel b3 = new BodyOfCandleModel(PatternCandles[3]);
-
-            if(b3 < b2 && b3 < b1) return new MLResult(model.symbol, false, 0);
 #if false
 // use for graphing the patterns
             List<ThreeBarPatternModel> patternModelList = new List<ThreeBarPatternModel>();
@@ -38,7 +32,7 @@ namespace CandlePatternML
 #endif
 
             Console.WriteLine($"found gap at  {PatternCandles[1].dtDotNet.ToShortDateString()}");
-            ThreeBarPatternModel input = new ThreeBarPatternModel
+            TwoBarPatternModel input = new TwoBarPatternModel
             {
                 GapBarLowHigh = new LowHighModel(PatternCandles[1].low, PatternCandles[1].high),
                 GapCandle = PatternCandles[1],
@@ -46,14 +40,11 @@ namespace CandlePatternML
                 Hold1BarLowHigh = new LowHighModel(PatternCandles[2].low, PatternCandles[2].high),
                 Hold1Candle = PatternCandles[2],
 
-                Hold2BarLowHigh = new LowHighModel(PatternCandles[3].low, PatternCandles[3].high),
-                Hold2Candle = PatternCandles[3],
-
             };
             // add in extra features that emphasize some aspects of the pattern
             input.SetExtraFeatures();
             // run the prediction
-            var result = mlEngine.predictionEngine.Predict(input);
+            var result = mlEngine.predictionEngine2Bar.Predict(input);
 
             Console.WriteLine($"Prediction for {model.symbol} : {(result.IsMatch ? "MATCH" : "NO MATCH")}, Probability: {result.Probability:P1}");
 

@@ -37,8 +37,11 @@ namespace CandlePatternML
 
             string authKey = GetAuthKey();
 
-            MLEngineWrapper mlEngine = new MLEngineWrapper();
+            MLEngineWrapper mlEngine2bar = new MLEngineWrapper(MLEngineWrapper.eMLEngineType.TwoBarPattern, "c:\\work\\TwoBarModel.zip");
+            MLEngineWrapper mlEngine3bar = new MLEngineWrapper(MLEngineWrapper.eMLEngineType.ThreeBarPattern,"c:\\work\\ThreeBarModel.zip");
+            
             List<MLResult> resultlist3bar = new List<MLResult>();
+            List<MLResult> resultlist2bar = new List<MLResult>();
 
             foreach (var v in Tickers)
             {
@@ -51,16 +54,25 @@ namespace CandlePatternML
                     Console.WriteLine($"Error retrieving data for {v}: {ex.Message}");
                     continue;
                 }
-                MLResult result = DoThreeBarLive(mlEngine, model);
+                MLResult result = DoThreeBarLive(mlEngine3bar, model);
+                resultlist3bar.Add(result);
 
-                 resultlist3bar.Add(result);
+                result = DoTwoBarLive(mlEngine2bar, model);
+                resultlist2bar.Add(result);
             }
 
             Console.WriteLine("Three Bar Pattern Results:");
             foreach (var r in resultlist3bar.Where(m=>m.Success))
             {
-                Console.WriteLine($"Confidence: {r.Confidence:P1}");
+                Console.WriteLine($"{r.Ticker} {r.Success} Confidence: {r.Confidence:P1}");
             }
+
+            Console.WriteLine("Two Bar Pattern Results:");
+            foreach (var r in resultlist2bar.Where(m => m.Success))
+            {
+                Console.WriteLine($"{r.Ticker}  {r.Success}Confidence: {r.Confidence:P1}");
+            }
+
 
             WriteWorkSheet(resultlist3bar);
             // write this to the google sheet

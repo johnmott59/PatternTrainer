@@ -53,7 +53,7 @@ namespace CandlePatternML
             // add in extra features that emphasize some aspects of the pattern
             input.SetExtraFeatures();
             // run the prediction
-            var result = mlEngine.predictionEngine.Predict(input);
+            var result = mlEngine.predictionEngine3Bar.Predict(input);
 
             Console.WriteLine($"Prediction for {model.symbol} : {(result.IsMatch ? "MATCH" : "NO MATCH")}, Probability: {result.Probability:P1}");
 
