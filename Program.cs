@@ -1,6 +1,7 @@
 ﻿using Microsoft.ML;
 using Microsoft.ML.Data;
 using Microsoft.ML.Trainers.FastTree;
+using PatternTrainer;
 using SchwabLib;
 using SchwabLib.Models;
 using System;
@@ -43,6 +44,8 @@ namespace CandlePatternML
             List<MLResult> resultlist3bar = new List<MLResult>();
             List<MLResult> resultlist2bar = new List<MLResult>();
 
+            WorkSheetModel results = new WorkSheetModel();
+
             foreach (var v in Tickers)
             {
                 GetCandleModel model;
@@ -54,11 +57,15 @@ namespace CandlePatternML
                     Console.WriteLine($"Error retrieving data for {v}: {ex.Message}");
                     continue;
                 }
-                MLResult result = DoThreeBarLive(mlEngine3bar, model);
-                resultlist3bar.Add(result);
+                MLResult result3 = DoThreeBarLive(mlEngine3bar, model);
+                resultlist3bar.Add(result3);
 
-                result = DoTwoBarLive(mlEngine2bar, model);
-                resultlist2bar.Add(result);
+                MLResult result2 = DoTwoBarLive(mlEngine2bar, model);
+                resultlist2bar.Add(result2);
+
+                // add to results worksheet
+                results.AddTicker(v,result3, result2);
+
             }
 
             Console.WriteLine("Three Bar Pattern Results:");
@@ -73,8 +80,9 @@ namespace CandlePatternML
                 Console.WriteLine($"{r.Ticker}  {r.Success}Confidence: {r.Confidence:P1}");
             }
 
+            WriteWorkSheet2(results);
 
-            WriteWorkSheet(resultlist3bar);
+           // WriteWorkSheet(resultlist3bar);
             // write this to the google sheet
         }
         static void Main(string[] args)
@@ -83,9 +91,8 @@ namespace CandlePatternML
 
             //p.DoTwoBarTraining();
 
-            p.Run().RunSynchronously();
+            p.Run().Wait();
 
-           
 
         }
     }
