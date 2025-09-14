@@ -24,6 +24,8 @@ namespace CandlePatternML
             // did the close of today fill the gap?
             if (PatternCandles[1].close <= PatternCandles[0].close) return new MLResult(model.symbol,false, 0);
 
+            // does the hold bar hold above the gap bar? 
+            if (PatternCandles[2].close <= PatternCandles[0].low) return new MLResult(model.symbol,false, 0);
 #if false
 // use for graphing the patterns
             List<ThreeBarPatternModel> patternModelList = new List<ThreeBarPatternModel>();

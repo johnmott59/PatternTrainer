@@ -24,6 +24,10 @@ namespace CandlePatternML
             // did the close of today fill the gap?
             if (PatternCandles[1].close <= PatternCandles[0].close) return new MLResult(model.symbol,false, 0);
 
+            // do the hold bars close below the low of the gap bar?
+            if (PatternCandles[2].close <= PatternCandles[0].low) return new MLResult(model.symbol, false, 0);
+            if (PatternCandles[3].close <= PatternCandles[0].low) return new MLResult(model.symbol, false, 0);
+
             // check to see if the body of candle 3 is below the body of candles 1 and 2
             BodyOfCandleModel b1 = new BodyOfCandleModel(PatternCandles[1]);
             BodyOfCandleModel b2 = new BodyOfCandleModel(PatternCandles[2]);
