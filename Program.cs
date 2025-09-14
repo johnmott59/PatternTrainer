@@ -40,7 +40,9 @@ namespace CandlePatternML
 
             MLEngineWrapper mlEngine2bar = new MLEngineWrapper(MLEngineWrapper.eMLEngineType.TwoBarPattern, "c:\\work\\TwoBarModel.zip");
             MLEngineWrapper mlEngine3bar = new MLEngineWrapper(MLEngineWrapper.eMLEngineType.ThreeBarPattern,"c:\\work\\ThreeBarModel.zip");
-            
+            MLEngineWrapper mlEngine4bar = new MLEngineWrapper(MLEngineWrapper.eMLEngineType.FourBarPattern, "c:\\work\\FourBarModel.zip");
+
+            List<MLResult> resultlist4bar = new List<MLResult>();
             List<MLResult> resultlist3bar = new List<MLResult>();
             List<MLResult> resultlist2bar = new List<MLResult>();
 
@@ -57,6 +59,10 @@ namespace CandlePatternML
                     Console.WriteLine($"Error retrieving data for {v}: {ex.Message}");
                     continue;
                 }
+
+                MLResult result4 = DoThreeBarLive(mlEngine4bar, model);
+                resultlist4bar.Add(result4);
+
                 MLResult result3 = DoThreeBarLive(mlEngine3bar, model);
                 resultlist3bar.Add(result3);
 
@@ -64,8 +70,14 @@ namespace CandlePatternML
                 resultlist2bar.Add(result2);
 
                 // add to results worksheet
-                results.AddTicker(v,result3, result2);
+                results.AddTicker(v,result2,result3,result4);
 
+            }
+
+            Console.WriteLine("Four Bar Pattern Results:");
+            foreach (var r in resultlist4bar.Where(m => m.Success))
+            {
+                Console.WriteLine($"{r.Ticker} {r.Success} Confidence: {r.Confidence:P1}");
             }
 
             Console.WriteLine("Three Bar Pattern Results:");
@@ -90,6 +102,7 @@ namespace CandlePatternML
             Program p = new Program();
 
             //p.DoTwoBarTraining();
+           // p.DoFourBarTraining();
 
             p.Run().Wait();
 

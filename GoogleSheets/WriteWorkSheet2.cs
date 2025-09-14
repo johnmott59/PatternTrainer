@@ -41,10 +41,15 @@ namespace CandlePatternML
             foreach (var v in results.Rows)
             {
                 worksheet.SetValue(rowindex, "A",v.Ticker);
-                worksheet.SetValue(rowindex, "B", v.ml3BarResults.Success);
-                worksheet.SetValue(rowindex, "C", v.ml3BarResults.Confidence);
-                worksheet.SetValue(rowindex, "D", v.ml2BarResults.Success);
-                worksheet.SetValue(rowindex, "E", v.ml2BarResults.Confidence);
+
+                worksheet.SetValue(rowindex, "B", v.ml2BarResults.Success);
+                worksheet.SetValue(rowindex, "C", v.ml2BarResults.Confidence);
+
+                worksheet.SetValue(rowindex, "D", v.ml3BarResults.Success);
+                worksheet.SetValue(rowindex, "E", v.ml3BarResults.Confidence);
+
+                worksheet.SetValue(rowindex, "F", v.ml4BarResults.Success);
+                worksheet.SetValue(rowindex, "G", v.ml4BarResults.Confidence);
                 rowindex++;
             }
  

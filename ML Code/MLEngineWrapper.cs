@@ -15,7 +15,8 @@ namespace CandlePatternML
         public enum eMLEngineType
         {
             TwoBarPattern,
-            ThreeBarPattern
+            ThreeBarPattern,
+            FourBarPattern
         }
         public MLContext mlContext { get; set; }
 
@@ -24,6 +25,7 @@ namespace CandlePatternML
         DataViewSchema modelSchema;
         public PredictionEngine<ThreeBarPatternModel, CandlePatternOutput> predictionEngine3Bar { get; set; }
         public PredictionEngine<TwoBarPatternModel, CandlePatternOutput> predictionEngine2Bar { get; set; }
+        public PredictionEngine<FourBarPatternModel, CandlePatternOutput> predictionEngine4Bar { get; set; }
 
 
         public MLEngineWrapper(eMLEngineType eEngine, string ModelFile)
@@ -50,6 +52,12 @@ namespace CandlePatternML
                         .Model
                         .CreatePredictionEngine<ThreeBarPatternModel, CandlePatternOutput>(loadedModel);
 
+                    break;
+                    case eMLEngineType.FourBarPattern:
+                // create a prediction engine
+                predictionEngine4Bar = mlContext
+                        .Model
+                        .CreatePredictionEngine<FourBarPatternModel, CandlePatternOutput>(loadedModel);
                     break;
                 default:
                     throw new Exception($"Unknown engine type {eEngine}");
