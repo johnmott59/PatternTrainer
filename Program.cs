@@ -59,8 +59,8 @@ namespace CandlePatternML
                     Console.WriteLine($"Error retrieving data for {v}: {ex.Message}");
                     continue;
                 }
-
-                MLResult result4 = DoThreeBarLive(mlEngine4bar, model);
+                
+                MLResult result4 = DoFourBarLive(mlEngine4bar, model);
                 resultlist4bar.Add(result4);
 
                 MLResult result3 = DoThreeBarLive(mlEngine3bar, model);
