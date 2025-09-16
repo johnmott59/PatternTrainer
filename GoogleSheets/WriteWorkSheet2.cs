@@ -27,7 +27,7 @@ namespace CandlePatternML
                 worksheet.CreateColumn(v);
             }
 
-            worksheet.SetValue(0, "A", DateTime.Today.ToShortDateString());
+            worksheet.SetValue(0, "A", DateTime.Today.ToShortDateString() + " " + DateTime.Now.ToShortTimeString());
 
             // place the column names in the first row
            
@@ -40,16 +40,29 @@ namespace CandlePatternML
             int rowindex = 2; // start at row 2 (row 0 is date, row 1 is column names)
             foreach (var v in results.Rows)
             {
+                // if there are no success tests skip this
+                if (!v.ml2BarResults.Success && !v.ml3BarResults.Success && !v.ml4BarResults.Success) continue;
+                
                 worksheet.SetValue(rowindex, "A",v.Ticker);
 
-                worksheet.SetValue(rowindex, "B", v.ml2BarResults.Success);
-                worksheet.SetValue(rowindex, "C", v.ml2BarResults.Confidence);
+                if (v.ml2BarResults.Success)
+                {
+                    worksheet.SetValue(rowindex, "B", v.ml2BarResults.Success);
+                    worksheet.SetValue(rowindex, "C", v.ml2BarResults.Confidence);
+                }
 
-                worksheet.SetValue(rowindex, "D", v.ml3BarResults.Success);
-                worksheet.SetValue(rowindex, "E", v.ml3BarResults.Confidence);
+                if (v.ml3BarResults.Success)
+                {
+                    worksheet.SetValue(rowindex, "D", v.ml3BarResults.Success);
+                    worksheet.SetValue(rowindex, "E", v.ml3BarResults.Confidence);
+                }
 
-                worksheet.SetValue(rowindex, "F", v.ml4BarResults.Success);
-                worksheet.SetValue(rowindex, "G", v.ml4BarResults.Confidence);
+                if (v.ml4BarResults.Success)
+                {
+                    worksheet.SetValue(rowindex, "F", v.ml4BarResults.Success);
+                    worksheet.SetValue(rowindex, "G", v.ml4BarResults.Confidence);
+                }
+
                 rowindex++;
             }
  
