@@ -41,7 +41,9 @@ namespace CandlePatternML
             MLEngineWrapper mlEngine2bar = new MLEngineWrapper(MLEngineWrapper.eMLEngineType.TwoBarPattern, "c:\\work\\TwoBarModel.zip");
             MLEngineWrapper mlEngine3bar = new MLEngineWrapper(MLEngineWrapper.eMLEngineType.ThreeBarPattern,"c:\\work\\ThreeBarModel.zip");
             MLEngineWrapper mlEngine4bar = new MLEngineWrapper(MLEngineWrapper.eMLEngineType.FourBarPattern, "c:\\work\\FourBarModel.zip");
+            MLEngineWrapper mlEngine5bar = new MLEngineWrapper(MLEngineWrapper.eMLEngineType.FiveBarPattern, "c:\\work\\FiveBarModel.zip");
 
+            List<MLResult> resultlist5bar = new List<MLResult>();
             List<MLResult> resultlist4bar = new List<MLResult>();
             List<MLResult> resultlist3bar = new List<MLResult>();
             List<MLResult> resultlist2bar = new List<MLResult>();
@@ -59,7 +61,10 @@ namespace CandlePatternML
                     Console.WriteLine($"Error retrieving data for {v}: {ex.Message}");
                     continue;
                 }
-                
+
+                MLResult result5 = DoFiveBarLive(mlEngine5bar, model);
+                resultlist5bar.Add(result5);
+
                 MLResult result4 = DoFourBarLive(mlEngine4bar, model);
                 resultlist4bar.Add(result4);
 
@@ -70,9 +75,16 @@ namespace CandlePatternML
                 resultlist2bar.Add(result2);
 
                 // add to results worksheet
-                results.AddTicker(v,result2,result3,result4);
+                results.AddTicker(v,result2,result3,result4,result5);
 
             }
+
+            Console.WriteLine("Five Bar Pattern Results:");
+            foreach (var r in resultlist5bar.Where(m => m.Success))
+            {
+                Console.WriteLine($"{r.Ticker} {r.Success} Confidence: {r.Confidence:P1}");
+            }
+
 
             Console.WriteLine("Four Bar Pattern Results:");
             foreach (var r in resultlist4bar.Where(m => m.Success))
@@ -102,7 +114,8 @@ namespace CandlePatternML
             Program p = new Program();
 
             //p.DoTwoBarTraining();
-           // p.DoFourBarTraining();
+            // p.DoFourBarTraining();
+            //p.DoFiveBarTraining();
 
             p.Run().Wait();
 

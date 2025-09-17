@@ -16,7 +16,8 @@ namespace CandlePatternML
         {
             TwoBarPattern,
             ThreeBarPattern,
-            FourBarPattern
+            FourBarPattern,
+            FiveBarPattern
         }
         public MLContext mlContext { get; set; }
 
@@ -26,6 +27,7 @@ namespace CandlePatternML
         public PredictionEngine<ThreeBarPatternModel, CandlePatternOutput> predictionEngine3Bar { get; set; }
         public PredictionEngine<TwoBarPatternModel, CandlePatternOutput> predictionEngine2Bar { get; set; }
         public PredictionEngine<FourBarPatternModel, CandlePatternOutput> predictionEngine4Bar { get; set; }
+        public PredictionEngine<FiveBarPatternModel, CandlePatternOutput> predictionEngine5Bar { get; set; }
 
 
         public MLEngineWrapper(eMLEngineType eEngine, string ModelFile)
@@ -48,17 +50,24 @@ namespace CandlePatternML
 
                 case eMLEngineType.ThreeBarPattern:
                     // create a prediction engine
-                    predictionEngine3Bar = mlContext
+                        predictionEngine3Bar = mlContext
                         .Model
                         .CreatePredictionEngine<ThreeBarPatternModel, CandlePatternOutput>(loadedModel);
 
                     break;
                     case eMLEngineType.FourBarPattern:
-                // create a prediction engine
-                predictionEngine4Bar = mlContext
+                     // create a prediction engine
+                        predictionEngine4Bar = mlContext
                         .Model
                         .CreatePredictionEngine<FourBarPatternModel, CandlePatternOutput>(loadedModel);
                     break;
+                case eMLEngineType.FiveBarPattern:
+                    // create a prediction engine
+                    predictionEngine5Bar = mlContext
+                    .Model
+                    .CreatePredictionEngine<FiveBarPatternModel, CandlePatternOutput>(loadedModel);
+                    break;
+
                 default:
                     throw new Exception($"Unknown engine type {eEngine}");
             }   

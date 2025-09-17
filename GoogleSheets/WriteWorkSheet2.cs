@@ -63,6 +63,12 @@ namespace CandlePatternML
                     worksheet.SetValue(rowindex, "G", v.ml4BarResults.Confidence);
                 }
 
+                if (v.ml5BarResults.Success)
+                {
+                    worksheet.SetValue(rowindex, "H", v.ml5BarResults.Success);
+                    worksheet.SetValue(rowindex, "I", v.ml5BarResults.Confidence);
+                }
+
                 rowindex++;
             }
  
