@@ -67,13 +67,15 @@ namespace CandlePatternML
                 GetCandleModel model;
                 try
                 {
-                    model = oAPIWrapper.GetCandles(authKey, v, DateTime.Today.AddDays(-10), DateTime.Today, APIWrapper.eCandleTime.Daily);
+                    model = oAPIWrapper.GetCandles(authKey, v, DateTime.Today.AddDays(-400), DateTime.Today, APIWrapper.eCandleTime.Daily);
                 } catch (Exception ex)
                 {
                     Console.WriteLine($"Error retrieving data for {v}: {ex.Message}");
                     continue;
                 }
 
+                // generate a png
+                SchwabLib.Charting.GeneratePNG(model,30, $"c:\\work\\charts\\{v}.png",-4);
                 MLResult result5 = DoFiveBarLive(mlEngine5bar, model);
                 resultlist5bar.Add(result5);
 
