@@ -31,6 +31,18 @@ namespace CandlePatternML
             "COIN","CRWD","GOOGL","ISRG","HOOD","LLY","META","MSFT","MSTR","NFLX","NVDA",
             "PLTR","TSLA","QQQ","SPY" };
 
+        static List<string> nasdaq100 = new List<string> {
+"RKT","ALLY","AAPL","AMD","AMZN","ARM","AVGO","COIN","GOOGL",
+"ISRG","LLY","META","MSFT","MSTR","NFLX","NVDA","PLTR","TSLA",
+"OKLO","SMR","NNE","IONQ","RGTI","QUBT","QBTS","SOFI","ROKU",
+"JPM","GS","ARRY","FSLR","BIDU","BABA","PDD","LRCX","MRNA",
+"CRCL","ORCL","IBM","XBI","CRSP","IBIT","RBLX","RKLB","ASTS",
+"UNH","ADI","ASML","V","MA","AXP","TMUS","WFC","C",
+"BA","SPOT","GE","ANET","COST","CRWD","ZS","PANW","FTNT",
+"SNOW","DDOG","CVNA","LULU","BBAI","BMNR","WULF","NBIS","IREN",
+
+};
+
 
         APIWrapper oAPIWrapper = new APIWrapper();
         public async Task Run()
@@ -50,7 +62,7 @@ namespace CandlePatternML
 
             WorkSheetModel results = new WorkSheetModel();
 
-            foreach (var v in Tickers)
+            foreach (var v in nasdaq100)
             {
                 GetCandleModel model;
                 try
