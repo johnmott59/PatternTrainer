@@ -20,20 +20,20 @@ namespace CandlePatternML
             List<Candle> PatternCandles = model.candles.Skip(length - 4).ToList();
 
             // do we have a gap?
-            if (PatternCandles[1].open <= PatternCandles[0].close) return new MLResult(model.symbol,false, 0);
+            if (PatternCandles[1].open <= PatternCandles[0].close) return new MLResult(model,false, 0);
             // did the close of today fill the gap?
-            if (PatternCandles[1].close <= PatternCandles[0].close) return new MLResult(model.symbol,false, 0);
+            if (PatternCandles[1].close <= PatternCandles[0].close) return new MLResult(model,false, 0);
 
             // do the hold bars close below the low of the gap bar?
-            if (PatternCandles[2].close <= PatternCandles[0].low) return new MLResult(model.symbol, false, 0);
-            if (PatternCandles[3].close <= PatternCandles[0].low) return new MLResult(model.symbol, false, 0);
+            if (PatternCandles[2].close <= PatternCandles[0].low) return new MLResult(model, false, 0);
+            if (PatternCandles[3].close <= PatternCandles[0].low) return new MLResult(model,  false, 0);
 
             // check to see if the body of candle 3 is below the body of candles 1 and 2
             BodyOfCandleModel b1 = new BodyOfCandleModel(PatternCandles[1]);
             BodyOfCandleModel b2 = new BodyOfCandleModel(PatternCandles[2]);
             BodyOfCandleModel b3 = new BodyOfCandleModel(PatternCandles[3]);
 
-            if(b3 < b2 && b3 < b1) return new MLResult(model.symbol, false, 0);
+            if(b3 < b2 && b3 < b1) return new MLResult(model, false, 0);
 #if false
 // use for graphing the patterns
             List<ThreeBarPatternModel> patternModelList = new List<ThreeBarPatternModel>();
@@ -73,7 +73,7 @@ namespace CandlePatternML
             }
 #endif
 
-            return new MLResult(model.symbol,result.IsMatch, result.Probability);
+            return new MLResult(model,result.IsMatch, result.Probability);
         }
     }
 }

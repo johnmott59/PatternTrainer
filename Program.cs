@@ -11,27 +11,10 @@ using System.Threading.Tasks;
 
 namespace CandlePatternML
 {
-    public class MLResult
+       public partial class Program
     {
-        public MLResult(string ticker,bool success, float confidence)
-        {
-            Ticker = ticker;
-            Success = success;
-            Confidence = confidence;
-        }
 
-        public string Ticker { get; set; }
-        public bool Success { get; set; }
-        public float Confidence { get; set; }
-    }
-
-    public partial class Program
-    {
-        static List<string> Tickers = new List<string> {"AAPL","AMD","AMZN","ARM","AVGO",
-            "COIN","CRWD","GOOGL","ISRG","HOOD","LLY","META","MSFT","MSTR","NFLX","NVDA",
-            "PLTR","TSLA","QQQ","SPY" };
-
-        static List<string> nasdaq100 = new List<string> {
+        static List<string> Tickers = new List<string> {
 "RKT","ALLY","AAPL","AMD","AMZN","ARM","AVGO","COIN","GOOGL",
 "ISRG","LLY","META","MSFT","MSTR","NFLX","NVDA","PLTR","TSLA",
 "OKLO","SMR","NNE","IONQ","RGTI","QUBT","QBTS","SOFI","ROKU",
@@ -62,7 +45,7 @@ namespace CandlePatternML
 
             WorkSheetModel results = new WorkSheetModel();
 
-            foreach (var v in nasdaq100)
+            foreach (var v in Tickers)
             {
                 GetCandleModel model;
                 try
@@ -76,17 +59,20 @@ namespace CandlePatternML
 
                 // generate a png
                 SchwabLib.Charting.GeneratePNG(model,30, $"c:\\work\\charts\\{v}.png",-4);
-                MLResult result5 = DoFiveBarLive(mlEngine5bar, model);
-                resultlist5bar.Add(result5);
 
-                MLResult result4 = DoFourBarLive(mlEngine4bar, model);
-                resultlist4bar.Add(result4);
+                MLResult result2 = DoTwoBarLive(mlEngine2bar, model);
+                resultlist2bar.Add(result2);
 
                 MLResult result3 = DoThreeBarLive(mlEngine3bar, model);
                 resultlist3bar.Add(result3);
 
-                MLResult result2 = DoTwoBarLive(mlEngine2bar, model);
-                resultlist2bar.Add(result2);
+                MLResult result4 = DoFourBarLive(mlEngine4bar, model);
+                resultlist4bar.Add(result4);
+
+                MLResult result5 = DoFiveBarLive(mlEngine5bar, model);
+                resultlist5bar.Add(result5);
+
+
 
                 // add to results worksheet
                 results.AddTicker(v,result2,result3,result4,result5);

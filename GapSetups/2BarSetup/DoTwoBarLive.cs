@@ -20,12 +20,12 @@ namespace CandlePatternML
             List<Candle> PatternCandles = model.candles.Skip(length - 3).ToList();
 
             // do we have a gap?
-            if (PatternCandles[1].open <= PatternCandles[0].close) return new MLResult(model.symbol,false, 0);
+            if (PatternCandles[1].open <= PatternCandles[0].close) return new MLResult(model,false, 0);
             // did the close of today fill the gap?
-            if (PatternCandles[1].close <= PatternCandles[0].close) return new MLResult(model.symbol,false, 0);
+            if (PatternCandles[1].close <= PatternCandles[0].close) return new MLResult(model,false, 0);
 
             // does the hold bar hold above the gap bar? 
-            if (PatternCandles[2].close <= PatternCandles[0].low) return new MLResult(model.symbol,false, 0);
+            if (PatternCandles[2].close <= PatternCandles[0].low) return new MLResult(model,false, 0);
 #if false
 // use for graphing the patterns
             List<ThreeBarPatternModel> patternModelList = new List<ThreeBarPatternModel>();
@@ -50,19 +50,8 @@ namespace CandlePatternML
 
             Console.WriteLine($"Prediction for {model.symbol} : {(result.IsMatch ? "MATCH" : "NO MATCH")}, Probability: {result.Probability:P1}");
 
-#if false
-// graph the successful patterns
-            if (result.IsMatch)
-            {
-                patternModelList.Add(input);
-                dtList.Add(PatternCandles[1].dtDotNet);
-                outputList.Add(result);
 
-                ThreeBarSvgReporter.WriteSvgHtml($"c:\\work\\3bar_{model.symbol}.html", patternModelList, dtList, outputList);
-            }
-#endif
-
-            return new MLResult(model.symbol,result.IsMatch, result.Probability);
+            return new MLResult(model,result.IsMatch, result.Probability);
         }
     }
 }
