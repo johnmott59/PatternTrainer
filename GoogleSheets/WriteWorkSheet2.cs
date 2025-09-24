@@ -41,7 +41,12 @@ namespace CandlePatternML
             foreach (var v in results.Rows)
             {
                 // if there are no success tests skip this
-                if (!v.ml2BarResults.Success && !v.ml3BarResults.Success && !v.ml4BarResults.Success) continue;
+                if (!v.ml2BarResults.Success 
+                    && !v.ml3BarResults.Success 
+                    && !v.ml4BarResults.Success
+                    && !v.ml5BarResults.Success
+                    && !v.ml6BarResults.Success
+                    ) continue;
                 
                 worksheet.SetValue(rowindex, "A",v.Ticker);
 
@@ -69,6 +74,11 @@ namespace CandlePatternML
                     worksheet.SetValue(rowindex, "I", v.ml5BarResults.Confidence.ToString("F2"));
                 }
 
+                if (v.ml6BarResults.Success)
+                {
+                    worksheet.SetValue(rowindex, "J", v.ml6BarResults.Success);
+                    worksheet.SetValue(rowindex, "K", v.ml6BarResults.Confidence.ToString("F2"));
+                }
                 rowindex++;
             }
  

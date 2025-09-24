@@ -44,6 +44,7 @@ namespace CandlePatternML
             List<MLResult> resultlist4bar = new List<MLResult>();
             List<MLResult> resultlist3bar = new List<MLResult>();
             List<MLResult> resultlist2bar = new List<MLResult>();
+            List<MLResult> resultRSI4bar = new List<MLResult>();
 
             WorkSheetModel results = new WorkSheetModel();
 
@@ -73,8 +74,12 @@ namespace CandlePatternML
                 MLResult result5 = DoFiveBarLive(mlEngine5bar, model);
                 resultlist5bar.Add(result5);
 
+                // get the RSI4bar result
+                MLResult result6 = DoRSI4Live(model);
+                resultRSI4bar.Add(result6);
+
                 // add to results worksheet
-                results.AddTicker(v,result2,result3,result4,result5);
+                results.AddTicker(v,result2,result3,result4,result5,result6);
 
             }
 
@@ -114,6 +119,15 @@ namespace CandlePatternML
             {
                 if (!tickersinplay.Contains(r.Ticker)) tickersinplay.Add(r.Ticker);
                 SchwabLib.Charting.GeneratePNG(r.CandleModel, 30, $"c:\\work\\charts\\{r.Ticker}.png", -5);
+                Console.WriteLine($"{r.Ticker} {r.Success} Confidence: {r.Confidence:P1}");
+            }
+
+
+            Console.WriteLine("RSI4 Pattern Results:");
+            foreach (var r in resultRSI4bar.Where(m => m.Success))
+            {
+                if (!tickersinplay.Contains(r.Ticker)) tickersinplay.Add(r.Ticker);
+                SchwabLib.Charting.GeneratePNG(r.CandleModel, 30, $"c:\\work\\charts\\{r.Ticker}.png", -1);
                 Console.WriteLine($"{r.Ticker} {r.Success} Confidence: {r.Confidence:P1}");
             }
 
