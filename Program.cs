@@ -23,6 +23,7 @@ namespace CandlePatternML
 "UNH","ADI","ASML","V","MA","AXP","TMUS","WFC","C",
 "BA","SPOT","GE","ANET","COST","CRWD","ZS","PANW","FTNT",
 "SNOW","DDOG","CVNA","LULU","BBAI","BMNR","WULF","NBIS","IREN",
+"WDC","STX","SNDK"
 
 };
 
@@ -32,6 +33,7 @@ namespace CandlePatternML
         {
 
             string authKey = GetAuthKey();
+            List<string> tickersinplay = new List<string>();
 
             MLEngineWrapper mlEngine2bar = new MLEngineWrapper(MLEngineWrapper.eMLEngineType.TwoBarPattern, "c:\\work\\TwoBarModel.zip");
             MLEngineWrapper mlEngine3bar = new MLEngineWrapper(MLEngineWrapper.eMLEngineType.ThreeBarPattern,"c:\\work\\ThreeBarModel.zip");
@@ -45,7 +47,7 @@ namespace CandlePatternML
 
             WorkSheetModel results = new WorkSheetModel();
 
-            foreach (var v in Tickers)
+            foreach (var v in Tickers) //.Where(m=>m == "SOFI"))
             {
                 GetCandleModel model;
                 try
@@ -58,7 +60,6 @@ namespace CandlePatternML
                 }
 
                 // generate a png
-                SchwabLib.Charting.GeneratePNG(model,30, $"c:\\work\\charts\\{v}.png",-4);
 
                 MLResult result2 = DoTwoBarLive(mlEngine2bar, model);
                 resultlist2bar.Add(result2);
@@ -72,37 +73,56 @@ namespace CandlePatternML
                 MLResult result5 = DoFiveBarLive(mlEngine5bar, model);
                 resultlist5bar.Add(result5);
 
-
-
                 // add to results worksheet
                 results.AddTicker(v,result2,result3,result4,result5);
 
             }
 
-            Console.WriteLine("Five Bar Pattern Results:");
-            foreach (var r in resultlist5bar.Where(m => m.Success))
-            {
-                Console.WriteLine($"{r.Ticker} {r.Success} Confidence: {r.Confidence:P1}");
-            }
-
-
-            Console.WriteLine("Four Bar Pattern Results:");
-            foreach (var r in resultlist4bar.Where(m => m.Success))
-            {
-                Console.WriteLine($"{r.Ticker} {r.Success} Confidence: {r.Confidence:P1}");
-            }
-
-            Console.WriteLine("Three Bar Pattern Results:");
-            foreach (var r in resultlist3bar.Where(m=>m.Success))
-            {
-                Console.WriteLine($"{r.Ticker} {r.Success} Confidence: {r.Confidence:P1}");
-            }
+            /*
+             * Generate a graphic for the succesul patterns. we start with shorter
+             * patterns and allow the longer patterns to overwrite the shorter ones
+             */
 
             Console.WriteLine("Two Bar Pattern Results:");
             foreach (var r in resultlist2bar.Where(m => m.Success))
             {
+                if (!tickersinplay.Contains(r.Ticker)) tickersinplay.Add(r.Ticker);
+
+                SchwabLib.Charting.GeneratePNG(r.CandleModel, 30, $"c:\\work\\charts\\{r.Ticker}.png", -2);
                 Console.WriteLine($"{r.Ticker}  {r.Success}Confidence: {r.Confidence:P1}");
             }
+
+            Console.WriteLine("Three Bar Pattern Results:");
+            foreach (var r in resultlist3bar.Where(m => m.Success))
+            {
+                if (!tickersinplay.Contains(r.Ticker)) tickersinplay.Add(r.Ticker);
+                SchwabLib.Charting.GeneratePNG(r.CandleModel, 30, $"c:\\work\\charts\\{r.Ticker}.png", -3);
+                Console.WriteLine($"{r.Ticker} {r.Success} Confidence: {r.Confidence:P1}");
+            }
+
+            Console.WriteLine("Four Bar Pattern Results:");
+            foreach (var r in resultlist4bar.Where(m => m.Success))
+            {
+                if (!tickersinplay.Contains(r.Ticker)) tickersinplay.Add(r.Ticker);
+                SchwabLib.Charting.GeneratePNG(r.CandleModel, 30, $"c:\\work\\charts\\{r.Ticker}.png", -4);
+                Console.WriteLine($"{r.Ticker} {r.Success} Confidence: {r.Confidence:P1}");
+            }
+
+
+            Console.WriteLine("Five Bar Pattern Results:");
+            foreach (var r in resultlist5bar.Where(m => m.Success))
+            {
+                if (!tickersinplay.Contains(r.Ticker)) tickersinplay.Add(r.Ticker);
+                SchwabLib.Charting.GeneratePNG(r.CandleModel, 30, $"c:\\work\\charts\\{r.Ticker}.png", -5);
+                Console.WriteLine($"{r.Ticker} {r.Success} Confidence: {r.Confidence:P1}");
+            }
+
+            // write the tickers to  a text file to load into TOS
+            System.IO.File.WriteAllLines("c:\\work\\tickersinplay.txt", tickersinplay);
+
+
+
+
 
             WriteWorkSheet2(results);
 
