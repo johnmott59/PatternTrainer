@@ -48,7 +48,7 @@ namespace CandlePatternML
 
             WorkSheetModel results = new WorkSheetModel();
 
-            foreach (var v in Tickers) //.Where(m=>m == "SOFI"))
+            foreach (var v in Tickers.Where(m=>m == "CRSP"))
             {
                 GetCandleModel model;
                 try

@@ -25,7 +25,11 @@ namespace CandlePatternML
             if (PatternCandles[1].close <= PatternCandles[0].close) return new MLResult(model,false, 0);
 
             // does the hold bar hold above the gap bar? 
+            // only the low can dip below the gap bar low
             if (PatternCandles[2].close <= PatternCandles[0].low) return new MLResult(model,false, 0);
+            if (PatternCandles[2].high <= PatternCandles[0].low) return new MLResult(model, false, 0);
+            if (PatternCandles[2].open <= PatternCandles[0].low) return new MLResult(model, false, 0);
+
 #if false
 // use for graphing the patterns
             List<ThreeBarPatternModel> patternModelList = new List<ThreeBarPatternModel>();
