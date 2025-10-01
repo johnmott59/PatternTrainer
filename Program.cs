@@ -31,6 +31,12 @@ namespace CandlePatternML
         APIWrapper oAPIWrapper = new APIWrapper();
         public async Task Run()
         {
+            // delete all the files in the charts directory
+
+            foreach (var file in System.IO.Directory.GetFiles("c:\\work\\charts"))
+            {
+                System.IO.File.Delete(file);
+            }
 
             string authKey = GetAuthKey();
             List<string> tickersinplay = new List<string>();
@@ -48,7 +54,7 @@ namespace CandlePatternML
 
             WorkSheetModel results = new WorkSheetModel();
 
-            foreach (var v in Tickers.Where(m=>m == "CRSP"))
+            foreach (var v in Tickers) //.Where(m=>m == "CRSP"))
             {
                 GetCandleModel model;
                 try

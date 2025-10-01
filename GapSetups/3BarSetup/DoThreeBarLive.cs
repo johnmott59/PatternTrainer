@@ -28,13 +28,13 @@ namespace CandlePatternML
             // only the low can dip below the gap bar low
             if (PatternCandles[2].close <= PatternCandles[0].low) return new MLResult(model, false, 0);
             if (PatternCandles[3].close <= PatternCandles[0].low) return new MLResult(model,  false, 0);
-
+#if true
             if (PatternCandles[2].open <= PatternCandles[0].low) return new MLResult(model, false, 0);
             if (PatternCandles[3].open <= PatternCandles[0].low) return new MLResult(model, false, 0);
 
             if (PatternCandles[2].high <= PatternCandles[0].low) return new MLResult(model, false, 0);
             if (PatternCandles[3].high <= PatternCandles[0].low) return new MLResult(model, false, 0);
-
+#endif
 
             // check to see if the body of candle 3 is below the body of candles 1 and 2
             BodyOfCandleModel b1 = new BodyOfCandleModel(PatternCandles[1]);
