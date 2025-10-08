@@ -12,7 +12,7 @@ namespace PatternTrainer
         public List<string> Headers { get; set; } = 
             new List<string> { 
                 "Ticker",
-                "2Bar Match", "2Bar Confidence",
+                "2Bar Match", "Note",
                 "3Bar Match", "3Bar Confidence",
                 "4Bar Match", "4Bar Confidence",
                 "5Bar Match", "5Bar Confidence",

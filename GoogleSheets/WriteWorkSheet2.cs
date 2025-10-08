@@ -53,7 +53,7 @@ namespace CandlePatternML
                 if (v.ml2BarResults.Success)
                 {
                     worksheet.SetValue(rowindex, "B", v.ml2BarResults.Success);
-                    worksheet.SetValue(rowindex, "C", v.ml2BarResults.Confidence.ToString("F2"));
+                    worksheet.SetValue(rowindex, "C", v.ml2BarResults.Notice);
                 }
 
                 if (v.ml3BarResults.Success)
