@@ -30,7 +30,20 @@ namespace CandlePatternML
                 noticeList.Add("Pre Gap Red");
             }
             Candle bar1 = PatternCandles[1]; // gap day
+
+            // if the close of day 1 is < close of day 0 then the gap failed
+            if (bar1.close < bar0.close)
+            {
+                return new MLResult(model, false, 0);
+            }
+
             Candle bar2 = PatternCandles[2]; // bar after gap (candidate inside bar)
+
+            // if the close of day 2 is < close of day 0 then the gap failed
+            if (bar2.close < bar0.close)
+            {
+                return new MLResult(model, false, 0);
+            }
 
             bool GapDayGreen = bar1.close > bar1.open;
             

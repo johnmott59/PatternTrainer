@@ -13,10 +13,10 @@ namespace PatternTrainer
             new List<string> { 
                 "Ticker",
                 "2Bar Match", "Note",
-                "3Bar Match", "3Bar Confidence",
-                "4Bar Match", "4Bar Confidence",
-                "5Bar Match", "5Bar Confidence",
-                "RSI4 Match", "RSI4 Confidence"
+                "3Bar Confidence",
+                "4Bar Confidence",
+                "5Bar Confidence",
+                "RSI4 Match"
             };
       
         public List<WorkSheetRowData> Rows { get; set; } = new List<WorkSheetRowData>();
@@ -26,7 +26,7 @@ namespace PatternTrainer
             MLResult ml3BarResults, 
             MLResult ml4BarResults,
             MLResult ml5BarResults,
-            MLResult ml6BarResults
+            MLResult RSI4Results
             )
         {
             Rows.Add( new WorkSheetRowData { 
@@ -35,7 +35,7 @@ namespace PatternTrainer
                 ml3BarResults = ml3BarResults,
                 ml4BarResults = ml4BarResults,
                 ml5BarResults = ml5BarResults,
-                ml6BarResults = ml6BarResults
+                RSI4Results = RSI4Results
             } );
         }   
     }
@@ -46,7 +46,7 @@ namespace PatternTrainer
         public MLResult ml2BarResults { get; set; }
         public MLResult ml4BarResults { get; set; }
         public MLResult ml5BarResults { get; set; }
-        public MLResult ml6BarResults { get; set; }
+        public MLResult RSI4Results { get; set; }
 
     }
 }

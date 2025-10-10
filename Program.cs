@@ -23,7 +23,7 @@ namespace CandlePatternML
 "UNH","ADI","ASML","V","MA","AXP","TMUS","WFC","C",
 "BA","SPOT","GE","ANET","COST","CRWD","ZS","PANW","FTNT",
 "SNOW","DDOG","CVNA","LULU","BBAI","BMNR","WULF","NBIS","IREN",
-"WDC","STX","SNDK"
+"WDC","STX","SNDK","SPY","QQQ","DIA"
 
 };
 

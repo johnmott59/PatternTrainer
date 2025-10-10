@@ -45,7 +45,7 @@ namespace CandlePatternML
                     && !v.ml3BarResults.Success 
                     && !v.ml4BarResults.Success
                     && !v.ml5BarResults.Success
-                    && !v.ml6BarResults.Success
+                    && !v.RSI4Results.Success
                     ) continue;
                 
                 worksheet.SetValue(rowindex, "A",v.Ticker);
@@ -58,26 +58,22 @@ namespace CandlePatternML
 
                 if (v.ml3BarResults.Success)
                 {
-                    worksheet.SetValue(rowindex, "D", v.ml3BarResults.Success);
-                    worksheet.SetValue(rowindex, "E", v.ml3BarResults.Confidence.ToString("F2"));
+                    worksheet.SetValue(rowindex, "D", v.ml3BarResults.Confidence.ToString("F2"));
                 }
 
                 if (v.ml4BarResults.Success)
                 {
-                    worksheet.SetValue(rowindex, "F", v.ml4BarResults.Success);
-                    worksheet.SetValue(rowindex, "G", v.ml4BarResults.Confidence.ToString("F2"));
+                    worksheet.SetValue(rowindex, "E", v.ml4BarResults.Confidence.ToString("F2"));
                 }
 
                 if (v.ml5BarResults.Success)
                 {
-                    worksheet.SetValue(rowindex, "H", v.ml5BarResults.Success);
-                    worksheet.SetValue(rowindex, "I", v.ml5BarResults.Confidence.ToString("F2"));
+                    worksheet.SetValue(rowindex, "F", v.ml5BarResults.Confidence.ToString("F2"));
                 }
 
-                if (v.ml6BarResults.Success)
+                if (v.RSI4Results.Success)
                 {
-                    worksheet.SetValue(rowindex, "J", v.ml6BarResults.Success);
-                    worksheet.SetValue(rowindex, "K", v.ml6BarResults.Confidence.ToString("F2"));
+                    worksheet.SetValue(rowindex, "G", v.RSI4Results.Confidence.ToString("F2"));
                 }
                 rowindex++;
             }
