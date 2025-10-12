@@ -283,5 +283,131 @@ namespace CandlePatternML
         {
             return EnsureSheetExistsAsync(sheetName).GetAwaiter().GetResult();
         }
+
+        /// <summary>
+        /// Reads data from a Google Sheet and returns it as a WorkSheet model
+        /// </summary>
+        /// <param name="sheetName">The name of the sheet to read from</param>
+        /// <param name="range">Optional range to read (e.g., "A1:Z100" or "A:Z"). If null, reads the entire sheet</param>
+        /// <param name="cancellationToken">Cancellation token</param>
+        /// <returns>A WorkSheet object containing the read data, or null if reading failed</returns>
+        public async Task<WorkSheet> ReadAsync(string sheetName, string range = null, CancellationToken cancellationToken = default)
+        {
+            try
+            {
+                var service = await GetSheetsServiceAsync(cancellationToken);
+                
+                // Construct the range string
+                string rangeString = string.IsNullOrEmpty(range) ? sheetName : $"{sheetName}!{range}";
+                
+                // Read the data from Google Sheets
+                var request = service.Spreadsheets.Values.Get(_spreadsheetId, rangeString);
+                var response = await request.ExecuteAsync(cancellationToken);
+                
+                if (response.Values == null || response.Values.Count == 0)
+                {
+                    Console.WriteLine($"No data found in sheet '{sheetName}'");
+                    return new WorkSheet(sheetName);
+                }
+                
+                // Convert the Google Sheets data to WorkSheet model
+                var worksheet = ConvertFromGoogleSheetsFormat(response.Values, sheetName);
+                
+                Console.WriteLine($"Successfully read {worksheet.RowCount} rows and {worksheet.ColumnCount} columns from sheet '{sheetName}'");
+                return worksheet;
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error reading from sheet '{sheetName}': {ex.Message}");
+                return null;
+            }
+        }
+
+        /// <summary>
+        /// Reads data from a Google Sheet and returns it as a WorkSheet model (synchronous version)
+        /// </summary>
+        /// <param name="sheetName">The name of the sheet to read from</param>
+        /// <param name="range">Optional range to read (e.g., "A1:Z100" or "A:Z"). If null, reads the entire sheet</param>
+        /// <returns>A WorkSheet object containing the read data, or null if reading failed</returns>
+        public WorkSheet Read(string sheetName, string range = null)
+        {
+            return ReadAsync(sheetName, range).GetAwaiter().GetResult();
+        }
+
+        /// <summary>
+        /// Converts Google Sheets data format to WorkSheet model
+        /// </summary>
+        private WorkSheet ConvertFromGoogleSheetsFormat(IList<IList<object>> values, string sheetName)
+        {
+            var worksheet = new WorkSheet(sheetName);
+            
+            if (values == null || values.Count == 0)
+                return worksheet;
+            
+            // Determine the number of columns (use the maximum row length)
+            int maxColumns = values.Max(row => row?.Count ?? 0);
+            
+            // Create columns
+            for (int col = 0; col < maxColumns; col++)
+            {
+                string header = $"Column{GetColumnLetter(col)}";
+                worksheet.CreateColumn(header);
+            }
+            
+            // If the first row looks like headers (all strings), use them as column headers
+            if (values.Count > 0 && values[0] != null && values[0].All(cell => cell is string))
+            {
+                for (int col = 0; col < Math.Min(values[0].Count, maxColumns); col++)
+                {
+                    worksheet.Columns[col].Header = values[0][col]?.ToString() ?? $"Column{GetColumnLetter(col)}";
+                }
+                
+                // Start data from row 1 (skip header row)
+                for (int row = 1; row < values.Count; row++)
+                {
+                    var dataRow = worksheet.CreateRow();
+                    if (values[row] != null)
+                    {
+                        for (int col = 0; col < Math.Min(values[row].Count, maxColumns); col++)
+                        {
+                            dataRow.SetValue(col, values[row][col]);
+                        }
+                    }
+                }
+            }
+            else
+            {
+                // No headers, treat all rows as data
+                for (int row = 0; row < values.Count; row++)
+                {
+                    var dataRow = worksheet.CreateRow();
+                    if (values[row] != null)
+                    {
+                        for (int col = 0; col < Math.Min(values[row].Count, maxColumns); col++)
+                        {
+                            dataRow.SetValue(col, values[row][col]);
+                        }
+                    }
+                }
+            }
+            
+            return worksheet;
+        }
+
+        /// <summary>
+        /// Converts a column index to a column letter (A, B, C, etc.)
+        /// </summary>
+        private static string GetColumnLetter(int columnIndex)
+        {
+            if (columnIndex < 0) throw new ArgumentException("Column index must be non-negative");
+            
+            string result = "";
+            while (columnIndex >= 0)
+            {
+                result = (char)('A' + (columnIndex % 26)) + result;
+                columnIndex = (columnIndex / 26) - 1;
+            }
+            return result;
+        }
     }
 }
