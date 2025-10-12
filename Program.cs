@@ -31,6 +31,18 @@ namespace CandlePatternML
         APIWrapper oAPIWrapper = new APIWrapper();
         public async Task Run()
         {
+            /*
+             * Read the worksheet containing the tickers
+             */
+            var tickers = await ReadWorkSheet("Tickers");
+
+            List<string>tickerlist = new List<string>();
+            foreach (var v in tickers.Rows)
+            {
+                tickerlist.Add(v.GetValue(0).ToString());
+            }
+
+
             // delete all the files in the charts directory
 
             foreach (var file in System.IO.Directory.GetFiles("c:\\work\\charts"))
@@ -54,8 +66,9 @@ namespace CandlePatternML
 
             WorkSheetModel results = new WorkSheetModel();
 
-            foreach (var v in Tickers) //.Where(m=>m == "CRSP"))
+            foreach (var v in tickerlist) //.Where(m=>m == "CRSP"))
             {
+                Console.WriteLine($"processing ticker {v}");
                 GetCandleModel model;
                 try
                 {

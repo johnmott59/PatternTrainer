@@ -61,7 +61,7 @@ namespace CandlePatternML
             List<CandlePatternOutput> outputList = new List<CandlePatternOutput>();
 #endif
 
-            Console.WriteLine($"found gap at  {PatternCandles[1].dtDotNet.ToShortDateString()}");
+          //  Console.WriteLine($"found gap at  {PatternCandles[1].dtDotNet.ToShortDateString()}");
             FourBarPatternModel input = new FourBarPatternModel
             {
                 GapBarLowHigh = new LowHighModel(PatternCandles[1].low, PatternCandles[1].high),
@@ -82,7 +82,7 @@ namespace CandlePatternML
             // run the prediction
             var result = mlEngine.predictionEngine4Bar.Predict(input);
 
-            Console.WriteLine($"Prediction for {model.symbol} : {(result.IsMatch ? "MATCH" : "NO MATCH")}, Probability: {result.Probability:P1}");
+          //  Console.WriteLine($"Prediction for {model.symbol} : {(result.IsMatch ? "MATCH" : "NO MATCH")}, Probability: {result.Probability:P1}");
 
 #if false
 // graph the successful patterns
