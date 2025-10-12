@@ -14,19 +14,6 @@ namespace CandlePatternML
        public partial class Program
     {
 
-        static List<string> Tickers = new List<string> {
-"RKT","ALLY","AAPL","AMD","AMZN","ARM","AVGO","COIN","GOOGL",
-"ISRG","LLY","META","MSFT","MSTR","NFLX","NVDA","PLTR","TSLA",
-"OKLO","SMR","NNE","IONQ","RGTI","QUBT","QBTS","SOFI","ROKU",
-"JPM","GS","ARRY","FSLR","BIDU","BABA","PDD","LRCX","MRNA",
-"CRCL","ORCL","IBM","XBI","CRSP","IBIT","RBLX","RKLB","ASTS",
-"UNH","ADI","ASML","V","MA","AXP","TMUS","WFC","C",
-"BA","SPOT","GE","ANET","COST","CRWD","ZS","PANW","FTNT",
-"SNOW","DDOG","CVNA","LULU","BBAI","BMNR","WULF","NBIS","IREN",
-"WDC","STX","SNDK","SPY","QQQ","DIA"
-
-};
-
 
         APIWrapper oAPIWrapper = new APIWrapper();
         public async Task Run()
