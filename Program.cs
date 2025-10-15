@@ -20,14 +20,14 @@ namespace CandlePatternML
         {
             string authKey = GetAuthKey();
 
-         //   var emodel = oAPIWrapper.GetCandles(authKey, "SPY", DateTime.Today.AddDays(-40), DateTime.Today, APIWrapper.eCandleTime.Daily);
+            //   var emodel = oAPIWrapper.GetCandles(authKey, "SPY", DateTime.Today.AddDays(-40), DateTime.Today, APIWrapper.eCandleTime.Daily);
 
-          //  FindDemarkPivots(emodel.candles.ToList());
+            //  FindDemarkPivots(emodel.candles.ToList());
 
-            /*
-             * Read the worksheet containing the tickers
-             */
-            var tickerWorksheet = await ReadWorkSheet("Tickers");
+        /*
+         * Read the worksheet containing the tickers
+         */
+        var tickerWorksheet = await ReadWorkSheet("Tickers");
 
 #if false
 // this is how we will add fields and update the worksheet

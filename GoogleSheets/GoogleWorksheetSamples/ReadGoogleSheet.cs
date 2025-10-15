@@ -20,13 +20,22 @@ namespace CandlePatternML
             
             try
             {
-                // Example 1: Read entire sheet
-                Console.WriteLine("=== Reading entire sheet ===");
+                // Example 1: Read entire sheet (with headers by default)
+                Console.WriteLine("=== Reading entire sheet (with headers) ===");
                 var entireSheet = await googleSync.ReadAsync("Sheet1");
                 if (entireSheet != null)
                 {
                     Console.WriteLine($"Read sheet '{entireSheet.SheetName}' with {entireSheet.RowCount} rows and {entireSheet.ColumnCount} columns");
                     PrintWorkSheetData(entireSheet);
+                }
+                
+                // Example 1b: Read entire sheet without headers
+                Console.WriteLine("\n=== Reading entire sheet (without headers) ===");
+                var entireSheetNoHeaders = await googleSync.ReadWithHeadersAsync("Sheet1", hasHeaders: false);
+                if (entireSheetNoHeaders != null)
+                {
+                    Console.WriteLine($"Read sheet '{entireSheetNoHeaders.SheetName}' with {entireSheetNoHeaders.RowCount} rows and {entireSheetNoHeaders.ColumnCount} columns");
+                    PrintWorkSheetData(entireSheetNoHeaders);
                 }
                 
                 // Example 2: Read specific range

@@ -17,7 +17,12 @@ namespace CandlePatternML
             
             // Create the Google Sheets synchronizer
             var googleSync = new WorkSheetGoogleSync(spreadsheetId, credentialsPath);
-            
+
+            //
+            // This now works correctly - headers are preserved!
+            var worksheet = await googleSync.ReadAsync("Tickers");
+            var success = await googleSync.SynchronizeAsync(worksheet);  // Headers preserved
+            var verify = await googleSync.ReadAsync("Tickers");  // Identical to original
             try
             {
                 // Example 1: Read entire sheet

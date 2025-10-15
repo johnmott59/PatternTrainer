@@ -321,15 +321,17 @@ namespace CandlePatternML
         /// </summary>
         public object[,] GetDataArray()
         {
-            int rows = RowCount;
+            int dataRows = RowCount;
             int cols = ColumnCount;
             
-            if (rows == 0 || cols == 0)
+            if (dataRows == 0 || cols == 0)
                 return new object[0, 0];
 
-            var data = new object[rows, cols];
+            // Include headers in the total row count
+            int totalRows = dataRows + 1; // +1 for header row
+            var data = new object[totalRows, cols];
 
-            // Fill headers
+            // Fill headers in row 0
             for (int col = 0; col < cols; col++)
             {
                 if (col < Columns.Count)
@@ -338,15 +340,15 @@ namespace CandlePatternML
                     data[0, col] = GetColumnLetter(col);
             }
 
-            // Fill data
-            for (int row = 0; row < rows; row++)
+            // Fill data starting from row 1
+            for (int row = 0; row < dataRows; row++)
             {
                 for (int col = 0; col < cols; col++)
                 {
                     if (row < Rows.Count)
-                        data[row, col] = Rows[row].GetValue(col);
+                        data[row + 1, col] = Rows[row].GetValue(col); // +1 to account for header row
                     else
-                        data[row, col] = null;
+                        data[row + 1, col] = null;
                 }
             }
 
