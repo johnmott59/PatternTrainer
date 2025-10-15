@@ -18,13 +18,38 @@ namespace CandlePatternML
         APIWrapper oAPIWrapper = new APIWrapper();
         public async Task Run()
         {
+            string authKey = GetAuthKey();
+
+         //   var emodel = oAPIWrapper.GetCandles(authKey, "SPY", DateTime.Today.AddDays(-40), DateTime.Today, APIWrapper.eCandleTime.Daily);
+
+          //  FindDemarkPivots(emodel.candles.ToList());
+
             /*
              * Read the worksheet containing the tickers
              */
-            var tickers = await ReadWorkSheet("Tickers");
+            var tickerWorksheet = await ReadWorkSheet("Tickers");
+
+#if false
+// this is how we will add fields and update the worksheet
+// this logic will go in the update routine to add in close and pivot values
+            // insert a row for the headers
+            tickerWorksheet.Rows.Insert(0, new WSRow(0, tickerWorksheet)) ;
+
+            tickerWorksheet.SetValue(0, "A", "Ticker");
+            tickerWorksheet.SetValue(0, "B", "Last Close");
+            tickerWorksheet.SetValue(0, "C", "Pivot High");
+
+            int ndx = 0;
+            foreach (var v in tickerWorksheet.Rows.Skip(1))
+            {
+                v.SetValue(1, ndx++);
+            }
+            
+            UpdateWorkSheet(tickerWorksheet);
+#endif
 
             List<string>tickerlist = new List<string>();
-            foreach (var v in tickers.Rows)
+            foreach (var v in tickerWorksheet.Rows)
             {
                 tickerlist.Add(v.GetValue(0).ToString());
             }
@@ -37,7 +62,7 @@ namespace CandlePatternML
                 System.IO.File.Delete(file);
             }
 
-            string authKey = GetAuthKey();
+            //string authKey = GetAuthKey();
             List<string> tickersinplay = new List<string>();
 
             MLEngineWrapper mlEngine2bar = new MLEngineWrapper(MLEngineWrapper.eMLEngineType.TwoBarPattern, "c:\\work\\TwoBarModel.zip");
@@ -66,6 +91,9 @@ namespace CandlePatternML
                     continue;
                 }
 
+                // find recent pivots
+                var DemarkPivots =  FindDemarkPivots(model.candles.ToList());
+
                 // generate a png
 
                 MLResult result2 = DoTwoBarLive(mlEngine2bar, model);
@@ -85,7 +113,7 @@ namespace CandlePatternML
                 resultRSI4bar.Add(result6);
 
                 // add to results worksheet
-                results.AddTicker(v,result2,result3,result4,result5,result6);
+                results.AddTicker(v,DemarkPivots,result2,result3,result4,result5,result6);
 
             }
 

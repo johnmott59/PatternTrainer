@@ -9,6 +9,8 @@ namespace PatternTrainer
 {
     public class WorkSheetModel
     {
+       
+
         public List<string> Headers { get; set; } = 
             new List<string> { 
                 "Ticker",
@@ -22,6 +24,7 @@ namespace PatternTrainer
         public List<WorkSheetRowData> Rows { get; set; } = new List<WorkSheetRowData>();
     
         public void AddTicker(string ticker,
+            PivotAnalysisResult DemarkPivots,
             MLResult ml2BarResults,
             MLResult ml3BarResults, 
             MLResult ml4BarResults,
@@ -31,6 +34,7 @@ namespace PatternTrainer
         {
             Rows.Add( new WorkSheetRowData { 
                 Ticker = ticker, 
+                DemarkPivots= DemarkPivots,
                 ml2BarResults = ml2BarResults, 
                 ml3BarResults = ml3BarResults,
                 ml4BarResults = ml4BarResults,
@@ -42,6 +46,7 @@ namespace PatternTrainer
     public class WorkSheetRowData
     {
         public string Ticker { get; set; }
+        public PivotAnalysisResult DemarkPivots { get; set; }
         public MLResult ml3BarResults { get; set; }
         public MLResult ml2BarResults { get; set; }
         public MLResult ml4BarResults { get; set; }
