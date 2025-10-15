@@ -20,9 +20,11 @@ namespace CandlePatternML
 
             //
             // This now works correctly - headers are preserved!
+#if false
             var worksheet = await googleSync.ReadAsync("Tickers");
             var success = await googleSync.SynchronizeAsync(worksheet);  // Headers preserved
             var verify = await googleSync.ReadAsync("Tickers");  // Identical to original
+#endif
             try
             {
                 // Example 1: Read entire sheet

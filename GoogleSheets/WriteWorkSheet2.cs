@@ -30,14 +30,10 @@ namespace CandlePatternML
             worksheet.SetValue(0, "A", DateTime.Today.ToShortDateString() + " " + DateTime.Now.ToShortTimeString());
 
             // place the column names in the first row
-           
-            for (int i=0; i < results.Headers.Count; i++)
-            {
-                worksheet.SetValue(1, i, results.Headers[i]);
-            }
+
 
             // now place the data in the rows below
-            int rowindex = 2; // start at row 2 (row 0 is date, row 1 is column names)
+            int rowindex = 1; // start at row 2 (row 0 is date, row 1 is column names)
             foreach (var v in results.Rows)
             {
                 // if there are no success tests skip this
