@@ -50,14 +50,11 @@ namespace CandlePatternML
 
             List<TickerDataModel> TickerDataModelList = new List<TickerDataModel>();
 
-          //  List<string>tickerlist = new List<string>();
+            // read the list of tickers and create ticker data models. so far they only contain the ticker symbol
             foreach (var v in tickerWorksheet.Rows)
             {
-                TickerDataModelList.Add(new TickerDataModel() { Ticker = v.GetValue(0).ToString() });
-               // tickerlist.Add(v.GetValue(0).ToString());
+                TickerDataModelList.Add(new TickerDataModel() { Ticker = v.GetValue(0).ToString() }); 
             }
-
-           
 
             // delete all the files in the charts directory
 
@@ -180,9 +177,14 @@ namespace CandlePatternML
             // write the tickers to  a text file to load into TOS
             System.IO.File.WriteAllLines("c:\\work\\tickersinplay.txt", tickersinplay);
 
+            /*
+             * Write out the ticker worksheet with the pivot data
+             */
+            UpdateTickerWorksheet(tickerWorksheet,TickerDataModelList);
 
-
-
+            /*
+             * write out the worksheet with the ML results
+             */
 
             WriteSetupsToWorksheet(oSetupWorkSheetModel);
 
