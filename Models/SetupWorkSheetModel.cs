@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace PatternTrainer
 {
-    public class WorkSheetModel
+    public class SetupWorkSheetModel
     {
        
 

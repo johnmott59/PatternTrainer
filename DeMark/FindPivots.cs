@@ -36,18 +36,18 @@ namespace CandlePatternML
     /// </summary>
     public class PivotAnalysisResult
     {
-        public PivotPoint CurrentPivotHigh { get; set; }
-        public PivotPoint PriorPivotHigh { get; set; }
-        public PivotPoint CurrentPivotLow { get; set; }
-        public PivotPoint PriorPivotLow { get; set; }
+        public PivotPoint LatestPivotHigh { get; set; }
+        public PivotPoint NextToLastPivotHigh { get; set; }
+        public PivotPoint LatestPivotLow { get; set; }
+        public PivotPoint NextToLastPivotLow { get; set; }
         public List<PivotPoint> AllPivotHighs { get; set; } = new List<PivotPoint>();
         public List<PivotPoint> AllPivotLows { get; set; } = new List<PivotPoint>();
         
         public bool HasValidPattern => 
-            CurrentPivotHigh != null && PriorPivotHigh != null && 
-            CurrentPivotLow != null && PriorPivotLow != null &&
-            PriorPivotHigh.Value > CurrentPivotHigh.Value && // Descending highs
-            PriorPivotLow.Value < CurrentPivotLow.Value;     // Ascending lows
+            LatestPivotHigh != null && NextToLastPivotHigh != null && 
+            LatestPivotLow != null && NextToLastPivotLow != null &&
+            NextToLastPivotHigh.Value > LatestPivotHigh.Value && // Descending highs
+            NextToLastPivotLow.Value < LatestPivotLow.Value;     // Ascending lows
     }
 
     public partial class Program
@@ -98,12 +98,12 @@ namespace CandlePatternML
             {
                 if (IsPivotHigh(candleList, currentIndex))
                 {
-                    result.CurrentPivotHigh = new PivotPoint(
+                    result.LatestPivotHigh = new PivotPoint(
                         candleList[currentIndex + 2].high, 
                         candleList[currentIndex + 2], 
                         currentIndex + 2
                     );
-                    result.AllPivotHighs.Add(result.CurrentPivotHigh);
+                    result.AllPivotHighs.Add(result.LatestPivotHigh);
                     noPivotHighCurrent = false;
                 }
                 else
@@ -113,9 +113,9 @@ namespace CandlePatternML
             }
             
             // Find prior pivot high (must be higher than current)
-            if (result.CurrentPivotHigh != null)
+            if (result.LatestPivotHigh != null)
             {
-                currentIndex = result.CurrentPivotHigh.Index + 1; // Start after current pivot
+                currentIndex = result.LatestPivotHigh.Index + 1; // Start after current pivot
                 while (noPivotHighPrior && currentIndex + 4 < candleList.Count)
                 {
                     if (IsPivotHigh(candleList, currentIndex))
@@ -127,9 +127,9 @@ namespace CandlePatternML
                         );
                         
                         // Check if this prior pivot is higher than current (descending pattern)
-                        if (priorPivot.Value > result.CurrentPivotHigh.Value)
+                        if (priorPivot.Value > result.LatestPivotHigh.Value)
                         {
-                            result.PriorPivotHigh = priorPivot;
+                            result.NextToLastPivotHigh = priorPivot;
                             result.AllPivotHighs.Add(priorPivot);
                             noPivotHighPrior = false;
                         }
@@ -162,12 +162,12 @@ namespace CandlePatternML
                 Console.WriteLine($"current date {candleList[currentIndex].dtDotNet.ToShortDateString()}");
                 if (IsPivotLow(candleList, currentIndex))
                 {
-                    result.CurrentPivotLow = new PivotPoint(
+                    result.LatestPivotLow = new PivotPoint(
                         candleList[currentIndex + 2].low, 
                         candleList[currentIndex + 2], 
                         currentIndex + 2
                     );
-                    result.AllPivotLows.Add(result.CurrentPivotLow);
+                    result.AllPivotLows.Add(result.LatestPivotLow);
                     noPivotLowCurrent = false;
                 }
                 else
@@ -177,9 +177,9 @@ namespace CandlePatternML
             }
             
             // Find prior pivot low (must be lower than current)
-            if (result.CurrentPivotLow != null)
+            if (result.LatestPivotLow != null)
             {
-                currentIndex = result.CurrentPivotLow.Index + 1; // Start after current pivot
+                currentIndex = result.LatestPivotLow.Index + 1; // Start after current pivot
                 while (noPivotLowPrior && currentIndex + 4 < candleList.Count)
                 {
                     if (IsPivotLow(candleList, currentIndex))
@@ -191,9 +191,9 @@ namespace CandlePatternML
                         );
                         
                         // Check if this prior pivot is lower than current (ascending pattern)
-                        if (priorPivot.Value < result.CurrentPivotLow.Value)
+                        if (priorPivot.Value < result.LatestPivotLow.Value)
                         {
-                            result.PriorPivotLow = priorPivot;
+                            result.NextToLastPivotLow = priorPivot;
                             result.AllPivotLows.Add(priorPivot);
                             noPivotLowPrior = false;
                         }
@@ -273,36 +273,36 @@ namespace CandlePatternML
         {
             Console.WriteLine("=== Pivot Analysis Results ===");
             
-            if (result.CurrentPivotHigh != null)
+            if (result.LatestPivotHigh != null)
             {
-                Console.WriteLine($"Current Pivot High: {result.CurrentPivotHigh.Value} on date {result.CurrentPivotHigh.Candle.dtDotNet.ToShortDateString()}");
+                Console.WriteLine($"Current Pivot High: {result.LatestPivotHigh.Value} on date {result.LatestPivotHigh.Candle.dtDotNet.ToShortDateString()}");
             }
             else
             {
                 Console.WriteLine("No current pivot high found");
             }
             
-            if (result.PriorPivotHigh != null)
+            if (result.NextToLastPivotHigh != null)
             {
-                Console.WriteLine($"Prior Pivot High: {result.PriorPivotHigh.Value} on date {result.PriorPivotHigh.Candle.dtDotNet.ToShortDateString()}");
+                Console.WriteLine($"Prior Pivot High: {result.NextToLastPivotHigh.Value} on date {result.NextToLastPivotHigh.Candle.dtDotNet.ToShortDateString()}");
             }
             else
             {
                 Console.WriteLine("No prior pivot high found");
             }
             
-            if (result.CurrentPivotLow != null)
+            if (result.LatestPivotLow != null)
             {
-                Console.WriteLine($"Current Pivot Low: {result.CurrentPivotLow.Value} at date {result.CurrentPivotLow.Candle.dtDotNet.ToShortDateString()}");
+                Console.WriteLine($"Current Pivot Low: {result.LatestPivotLow.Value} at date {result.LatestPivotLow.Candle.dtDotNet.ToShortDateString()}");
             }
             else
             {
                 Console.WriteLine("No current pivot low found");
             }
             
-            if (result.PriorPivotLow != null)
+            if (result.NextToLastPivotLow != null)
             {
-                Console.WriteLine($"Prior Pivot Low: {result.PriorPivotLow.Value} at index {result.PriorPivotLow.Candle.dtDotNet.ToShortDateString()}");
+                Console.WriteLine($"Prior Pivot Low: {result.NextToLastPivotLow.Value} at index {result.NextToLastPivotLow.Candle.dtDotNet.ToShortDateString()}");
             }
             else
             {

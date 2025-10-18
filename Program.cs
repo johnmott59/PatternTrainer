@@ -48,12 +48,16 @@ namespace CandlePatternML
             UpdateWorkSheet(tickerWorksheet);
 #endif
 
-            List<string>tickerlist = new List<string>();
+            List<TickerDataModel> TickerDataModelList = new List<TickerDataModel>();
+
+          //  List<string>tickerlist = new List<string>();
             foreach (var v in tickerWorksheet.Rows)
             {
-                tickerlist.Add(v.GetValue(0).ToString());
+                TickerDataModelList.Add(new TickerDataModel() { Ticker = v.GetValue(0).ToString() });
+               // tickerlist.Add(v.GetValue(0).ToString());
             }
 
+           
 
             // delete all the files in the charts directory
 
@@ -76,23 +80,31 @@ namespace CandlePatternML
             List<MLResult> resultlist2bar = new List<MLResult>();
             List<MLResult> resultRSI4bar = new List<MLResult>();
 
-            WorkSheetModel results = new WorkSheetModel();
+            SetupWorkSheetModel oSetupWorkSheetModel = new SetupWorkSheetModel();
 
-            foreach (var v in tickerlist) //.Where(m=>m == "CRSP"))
+            foreach (var tdm in TickerDataModelList) //.Where(m=>m == "CRSP"))
             {
-                Console.WriteLine($"processing ticker {v}");
+                string ticker = tdm.Ticker;
+
+                Console.WriteLine($"processing ticker {ticker}");
                 GetCandleModel model;
                 try
                 {
-                    model = oAPIWrapper.GetCandles(authKey, v, DateTime.Today.AddDays(-400), DateTime.Today, APIWrapper.eCandleTime.Daily);
+                    model = oAPIWrapper.GetCandles(authKey, ticker, DateTime.Today.AddDays(-400), DateTime.Today, APIWrapper.eCandleTime.Daily);
                 } catch (Exception ex)
                 {
-                    Console.WriteLine($"Error retrieving data for {v}: {ex.Message}");
+                    Console.WriteLine($"Error retrieving data for {ticker}: {ex.Message}");
                     continue;
                 }
 
                 // find recent pivots
                 var DemarkPivots =  FindDemarkPivots(model.candles.ToList());
+
+                // update this ticker data model with the pivots
+                tdm.LatestPivotHigh = DemarkPivots.LatestPivotHigh;
+                tdm.LatestPivotLow = DemarkPivots.LatestPivotLow;
+                tdm.NextToLastPivotLow = DemarkPivots.NextToLastPivotLow;
+                tdm.NextToLastPivotHigh = DemarkPivots.NextToLastPivotHigh;
 
                 // generate a png
 
@@ -113,7 +125,7 @@ namespace CandlePatternML
                 resultRSI4bar.Add(result6);
 
                 // add to results worksheet
-                results.AddTicker(v,DemarkPivots,result2,result3,result4,result5,result6);
+                oSetupWorkSheetModel.AddTicker(ticker,DemarkPivots,result2,result3,result4,result5,result6);
 
             }
 
@@ -172,7 +184,7 @@ namespace CandlePatternML
 
 
 
-            WriteWorkSheet2(results);
+            WriteSetupsToWorksheet(oSetupWorkSheetModel);
 
            // WriteWorkSheet(resultlist3bar);
             // write this to the google sheet

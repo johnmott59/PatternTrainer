@@ -41,20 +41,20 @@ namespace CandlePatternML
             if (result.HasValidPattern)
             {
                 Console.WriteLine("✅ Valid DeMark pattern detected!");
-                Console.WriteLine($"   - Descending highs: {result.PriorPivotHigh.Value} > {result.CurrentPivotHigh.Value}");
-                Console.WriteLine($"   - Ascending lows: {result.PriorPivotLow.Value} < {result.CurrentPivotLow.Value}");
+                Console.WriteLine($"   - Descending highs: {result.NextToLastPivotHigh.Value} > {result.LatestPivotHigh.Value}");
+                Console.WriteLine($"   - Ascending lows: {result.NextToLastPivotLow.Value} < {result.LatestPivotLow.Value}");
             }
             else
             {
                 Console.WriteLine("❌ No valid DeMark pattern found");
                 
-                if (result.CurrentPivotHigh == null)
+                if (result.LatestPivotHigh == null)
                     Console.WriteLine("   - Missing current pivot high");
-                if (result.PriorPivotHigh == null)
+                if (result.NextToLastPivotHigh == null)
                     Console.WriteLine("   - Missing prior pivot high");
-                if (result.CurrentPivotLow == null)
+                if (result.LatestPivotLow == null)
                     Console.WriteLine("   - Missing current pivot low");
-                if (result.PriorPivotLow == null)
+                if (result.NextToLastPivotLow == null)
                     Console.WriteLine("   - Missing prior pivot low");
             }
             

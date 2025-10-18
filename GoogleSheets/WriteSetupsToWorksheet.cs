@@ -13,7 +13,7 @@ namespace CandlePatternML
 
     public partial class Program
     {
-        public void WriteWorkSheet2(WorkSheetModel results)
+        public void WriteSetupsToWorksheet(SetupWorkSheetModel results)
         {
             var googleSync = new WorkSheetGoogleSync(
          spreadsheetId: ConfigurationManager.AppSettings["spreadsheetid"],
