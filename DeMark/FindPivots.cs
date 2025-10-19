@@ -229,13 +229,12 @@ namespace CandlePatternML
             var t2 = candleList[t2Index];
             var t3 = candleList[t3Index];
             var t4 = candleList[t4Index];
-            
+
             return t2.high > t0.high &&
                    t2.high > t1.high &&
                    t2.high > t3.high &&
-                   t2.high > t4.high &&
-                   t1.high > t0.high &&
-                   t3.high > t4.high;
+                   t2.high > t4.high;
+                  
         }
 
         /// <summary>
@@ -261,9 +260,7 @@ namespace CandlePatternML
             return t2.low < t0.low &&
                    t2.low < t1.low &&
                    t2.low < t3.low &&
-                   t2.low < t4.low &&
-                   t1.low < t0.low &&
-                   t3.low < t4.low;
+                   t2.low < t4.low ;
         }
 
         /// <summary>

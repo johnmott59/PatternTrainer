@@ -29,34 +29,11 @@ namespace CandlePatternML
          */
         var tickerWorksheet = await ReadWorkSheet("Tickers");
 
-#if false
-// this is how we will add fields and update the worksheet
-// this logic will go in the update routine to add in close and pivot values
-            // insert a row for the headers
-            tickerWorksheet.Rows.Insert(0, new WSRow(0, tickerWorksheet)) ;
+        TickerListWorksheetModel oTickerListWorksheetModel = new TickerListWorksheetModel();
 
-            tickerWorksheet.SetValue(0, "A", "Ticker");
-            tickerWorksheet.SetValue(0, "B", "Last Close");
-            tickerWorksheet.SetValue(0, "C", "Pivot High");
+        List<TickerListRowDataModel> TickerDataModelList = oTickerListWorksheetModel.RowDataList; //  new List<TickerListRowDataModel>();
 
-            int ndx = 0;
-            foreach (var v in tickerWorksheet.Rows.Skip(1))
-            {
-                v.SetValue(1, ndx++);
-            }
-            
-            UpdateWorkSheet(tickerWorksheet);
-#endif
-
-            List<TickerDataModel> TickerDataModelList = new List<TickerDataModel>();
-
-            // read the list of tickers and create ticker data models. so far they only contain the ticker symbol
-            foreach (var v in tickerWorksheet.Rows)
-            {
-                TickerDataModelList.Add(new TickerDataModel() { Ticker = v.GetValue(0).ToString() }); 
-            }
-
-            // delete all the files in the charts directory
+        // delete all the files in the charts directory
 
             foreach (var file in System.IO.Directory.GetFiles("c:\\work\\charts"))
             {
@@ -97,11 +74,15 @@ namespace CandlePatternML
                 // find recent pivots
                 var DemarkPivots =  FindDemarkPivots(model.candles.ToList());
 
+                // save the most recent close
+                tdm.LastClose = model.candles[^1].close;
+
                 // update this ticker data model with the pivots
                 tdm.LatestPivotHigh = DemarkPivots.LatestPivotHigh;
+                tdm.NextToLastPivotHigh = DemarkPivots.NextToLastPivotHigh;
+
                 tdm.LatestPivotLow = DemarkPivots.LatestPivotLow;
                 tdm.NextToLastPivotLow = DemarkPivots.NextToLastPivotLow;
-                tdm.NextToLastPivotHigh = DemarkPivots.NextToLastPivotHigh;
 
                 // generate a png
 
@@ -180,7 +161,8 @@ namespace CandlePatternML
             /*
              * Write out the ticker worksheet with the pivot data
              */
-            UpdateTickerWorksheet(tickerWorksheet,TickerDataModelList);
+
+            oTickerListWorksheetModel.UpdateTickerWorksheet();
 
             /*
              * write out the worksheet with the ML results
