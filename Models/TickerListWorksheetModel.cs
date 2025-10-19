@@ -23,6 +23,7 @@ namespace CandlePatternML
 
         public PivotPoint LatestPivotLow { get; set; }
         public PivotPoint NextToLastPivotLow { get; set; }
+        public Candle? PivotLowTrendBreak { get; set; }
 
         // given a list of candle data, find the first candle that breaks the pivot high downtrend
 
@@ -55,6 +56,40 @@ namespace CandlePatternML
                 {
                     // we have a break of the downtrend
                     PivotHighTrendBreak = candles[i];
+                    break;
+                }
+            }
+        }
+
+        public void FindPivotLowBreak(List<Candle> candles)
+        {
+            // locate the candle after the latest pivot low
+            if (LatestPivotLow == null || NextToLastPivotLow == null)
+            {
+                return;
+            }
+            int latestPivotIndex = candles.FindIndex(c => c.dtDotNet == LatestPivotLow.dtCandle);
+            if (latestPivotIndex == -1 || latestPivotIndex + 1 >= candles.Count)
+            {
+                return;
+            }
+
+            int candleCountinRun = NextToLastPivotLow.Index - LatestPivotLow.Index;
+            double slope = (double)(LatestPivotLow.Value - NextToLastPivotLow.Value)
+                / (double)candleCountinRun;
+
+            // for each candle after the last pivot high, compute the estimated value along 
+            // the slope and see if the candle close breaks that value
+            double CurrentEndValue = (double)LatestPivotLow.Value;
+            for (int i = latestPivotIndex + 1; i < candles.Count; i++)
+            {
+                // see where the downtrend line is at this candle
+                CurrentEndValue += slope;
+                // see if this candle close breaks that value
+                if (candles[i].close < (decimal)CurrentEndValue)
+                {
+                    // we have a break of the downtrend
+                    PivotLowTrendBreak = candles[i];
                     break;
                 }
             }
@@ -117,6 +152,7 @@ namespace CandlePatternML
 
                         row.SetValue("C", "");
                         row.SetValue("D", "");
+                        row.SetValue("E", "");
 
                         if (v.LatestPivotHigh != null && v.NextToLastPivotHigh != null)
                         {
@@ -125,17 +161,28 @@ namespace CandlePatternML
                                 row.SetValue("C", $"({v.LatestPivotHigh?.dtCandle.ToString("MM/dd/yyyy")}) {v.LatestPivotHigh?.Value}");
                                 row.SetValue("D", $"({v.NextToLastPivotHigh?.dtCandle.ToString("MM/dd/yyyy")}) {v.NextToLastPivotHigh?.Value}");
                             }
+                            // is there a pivot high trend break?
+                            if (v.PivotHighTrendBreak != null)
+                            {
+                                row.SetValue("E", $"({v.PivotHighTrendBreak?.dtDotNet.ToString("MM/dd/yyyy")}) {v.PivotHighTrendBreak?.close}");
+                            }
                         }
 
-                        row.SetValue("E", "");
                         row.SetValue("F", "");
+                        row.SetValue("G", "");
+                        row.SetValue("H", "");
                         // we want the most recent pivot low to be higher than the one previous
                         if (v.LatestPivotLow != null && v.NextToLastPivotLow != null)
                         {
                             if (v.LatestPivotLow.Value > v.NextToLastPivotLow.Value)
                             {
-                                row.SetValue("E", $"({v.LatestPivotLow?.dtCandle.ToString("MM/dd/yyyy")}) {v.LatestPivotLow?.Value}");
-                                row.SetValue("F", $"({v.NextToLastPivotLow?.dtCandle.ToString("MM/dd/yyyy")}) {v.NextToLastPivotLow?.Value}");
+                                row.SetValue("F", $"({v.LatestPivotLow?.dtCandle.ToString("MM/dd/yyyy")}) {v.LatestPivotLow?.Value}");
+                                row.SetValue("G", $"({v.NextToLastPivotLow?.dtCandle.ToString("MM/dd/yyyy")}) {v.NextToLastPivotLow?.Value}");
+                            }
+                            // is there a pivot low trend break?
+                            if (v.PivotLowTrendBreak != null)
+                            {
+                                row.SetValue("H", $"({v.PivotLowTrendBreak?.dtDotNet.ToString("MM/dd/yyyy")}) {v.PivotLowTrendBreak?.close}");
                             }
                         }
                     }
