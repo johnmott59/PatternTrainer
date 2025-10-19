@@ -82,6 +82,7 @@ namespace CandlePatternML
                 tdm.LatestPivotHigh = DemarkPivots.LatestPivotHigh;
                 tdm.NextToLastPivotHigh = DemarkPivots.NextToLastPivotHigh;
 
+                // see if we have a break of the pivot high downtrend
                 tdm.FindPivotHighBreak(model.candles.ToList());
 
                 tdm.LatestPivotLow = DemarkPivots.LatestPivotLow;
