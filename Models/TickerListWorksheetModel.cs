@@ -19,9 +19,46 @@ namespace CandlePatternML
 
         public PivotPoint LatestPivotHigh { get; set; }
         public PivotPoint NextToLastPivotHigh { get; set; }
+        public Candle? PivotHighTrendBreak { get; set; }
 
         public PivotPoint LatestPivotLow { get; set; }
         public PivotPoint NextToLastPivotLow { get; set; }
+
+        // given a list of candle data, find the first candle that breaks the pivot high downtrend
+
+        public void FindPivotHighBreak(List<Candle> candles)
+        {
+            // locate the candle after the latest pivot high
+            if (LatestPivotHigh == null || NextToLastPivotHigh == null)
+            {
+                return;
+            }
+            int latestPivotIndex = candles.FindIndex(c => c.dtDotNet == LatestPivotHigh.dtCandle);
+            if (latestPivotIndex == -1 || latestPivotIndex + 1 >= candles.Count)
+            {
+                return;
+            }
+
+            int candleCountinRun = NextToLastPivotHigh.Index - LatestPivotHigh.Index;
+            double slope = (double)(LatestPivotHigh.Value - NextToLastPivotHigh.Value)
+                / (double)candleCountinRun;
+
+            // for each candle after the last pivot high, compute the estimated value along 
+            // the slope and see if the candle close breaks that value
+            double CurrentEndValue = (double)LatestPivotHigh.Value;
+            for (int i= latestPivotIndex + 1; i < candles.Count; i++)
+            {
+                // see where the downtrend line is at this candle
+                CurrentEndValue += slope;
+                // see if this candle close breaks that value
+                if (candles[i].close > (decimal)CurrentEndValue)
+                {
+                    // we have a break of the downtrend
+                    PivotHighTrendBreak = candles[i];
+                    break;
+                }
+            }
+        }
 
     }
     /// <summary>

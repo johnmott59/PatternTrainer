@@ -6,6 +6,7 @@ using SchwabLib;
 using SchwabLib.Models;
 using System;
 using System.Collections.Generic;
+using System.Reflection.Metadata;
 using System.Threading.Tasks;
 
 
@@ -80,6 +81,8 @@ namespace CandlePatternML
                 // update this ticker data model with the pivots
                 tdm.LatestPivotHigh = DemarkPivots.LatestPivotHigh;
                 tdm.NextToLastPivotHigh = DemarkPivots.NextToLastPivotHigh;
+
+                tdm.FindPivotHighBreak(model.candles.ToList());
 
                 tdm.LatestPivotLow = DemarkPivots.LatestPivotLow;
                 tdm.NextToLastPivotLow = DemarkPivots.NextToLastPivotLow;
