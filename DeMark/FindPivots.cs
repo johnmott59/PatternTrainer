@@ -11,37 +11,16 @@ using System.Data;
 namespace CandlePatternML
 {
     /// <summary>
-    /// Represents a pivot point with its value and the candle that contains it
-    /// </summary>
-    public class PivotPoint
-    {
-        public decimal Value { get; set; }
-        public Candle Candle { get; set; }
-        public int Index { get; set; } // Index in the original candle list
-        public DateTime dtCandle
-        {
-            get { return Candle.dtDotNet; }
-        }
-        
-        public PivotPoint(decimal value, Candle candle, int index)
-        {
-            Value = value;
-            Candle = candle;
-            Index = index;
-        }
-    }
-
-    /// <summary>
     /// Contains the results of pivot analysis
     /// </summary>
     public class PivotAnalysisResult
     {
-        public PivotPoint LatestPivotHigh { get; set; }
-        public PivotPoint NextToLastPivotHigh { get; set; }
-        public PivotPoint LatestPivotLow { get; set; }
-        public PivotPoint NextToLastPivotLow { get; set; }
-        public List<PivotPoint> AllPivotHighs { get; set; } = new List<PivotPoint>();
-        public List<PivotPoint> AllPivotLows { get; set; } = new List<PivotPoint>();
+        public PivotPointModel LatestPivotHigh { get; set; }
+        public PivotPointModel NextToLastPivotHigh { get; set; }
+        public PivotPointModel LatestPivotLow { get; set; }
+        public PivotPointModel NextToLastPivotLow { get; set; }
+        public List<PivotPointModel> AllPivotHighs { get; set; } = new List<PivotPointModel>();
+        public List<PivotPointModel> AllPivotLows { get; set; } = new List<PivotPointModel>();
         
         public bool HasValidPattern => 
             LatestPivotHigh != null && NextToLastPivotHigh != null && 
@@ -98,7 +77,7 @@ namespace CandlePatternML
             {
                 if (IsPivotHigh(candleList, currentIndex))
                 {
-                    result.LatestPivotHigh = new PivotPoint(
+                    result.LatestPivotHigh = new PivotPointModel(
                         candleList[currentIndex + 2].high, 
                         candleList[currentIndex + 2], 
                         currentIndex + 2
@@ -120,7 +99,7 @@ namespace CandlePatternML
                 {
                     if (IsPivotHigh(candleList, currentIndex))
                     {
-                        var priorPivot = new PivotPoint(
+                        var priorPivot = new PivotPointModel(
                             candleList[currentIndex + 2].high, 
                             candleList[currentIndex + 2], 
                             currentIndex + 2
@@ -162,7 +141,7 @@ namespace CandlePatternML
                 Console.WriteLine($"current date {candleList[currentIndex].dtDotNet.ToShortDateString()}");
                 if (IsPivotLow(candleList, currentIndex))
                 {
-                    result.LatestPivotLow = new PivotPoint(
+                    result.LatestPivotLow = new PivotPointModel(
                         candleList[currentIndex + 2].low, 
                         candleList[currentIndex + 2], 
                         currentIndex + 2
@@ -184,7 +163,7 @@ namespace CandlePatternML
                 {
                     if (IsPivotLow(candleList, currentIndex))
                     {
-                        var priorPivot = new PivotPoint(
+                        var priorPivot = new PivotPointModel(
                             candleList[currentIndex + 2].low, 
                             candleList[currentIndex + 2], 
                             currentIndex + 2

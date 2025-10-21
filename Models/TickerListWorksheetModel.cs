@@ -16,13 +16,14 @@ namespace CandlePatternML
     {
         public string Ticker { get; set; }
         public decimal LastClose { get; set; }
+        public GetCandleModel oCandleModel { get; set; }
 
-        public PivotPoint LatestPivotHigh { get; set; }
-        public PivotPoint NextToLastPivotHigh { get; set; }
+        public PivotPointModel LatestPivotHigh { get; set; }
+        public PivotPointModel NextToLastPivotHigh { get; set; }
         public Candle? PivotHighTrendBreak { get; set; }
 
-        public PivotPoint LatestPivotLow { get; set; }
-        public PivotPoint NextToLastPivotLow { get; set; }
+        public PivotPointModel LatestPivotLow { get; set; }
+        public PivotPointModel NextToLastPivotLow { get; set; }
         public Candle? PivotLowTrendBreak { get; set; }
 
         // given a list of candle data, find the first candle that breaks the pivot high downtrend

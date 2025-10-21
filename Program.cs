@@ -6,6 +6,7 @@ using SchwabLib;
 using SchwabLib.Models;
 using System;
 using System.Collections.Generic;
+using System.Reflection;
 using System.Reflection.Metadata;
 using System.Threading.Tasks;
 
@@ -77,6 +78,8 @@ namespace CandlePatternML
 
                 // save the most recent close
                 tdm.LastClose = model.candles[^1].close;
+                // save all candle data so we can draw a chart
+                tdm.oCandleModel = model;
 
                 // update this ticker data model with the pivots
                 tdm.LatestPivotHigh = DemarkPivots.LatestPivotHigh;
@@ -88,6 +91,7 @@ namespace CandlePatternML
                 tdm.LatestPivotLow = DemarkPivots.LatestPivotLow;
                 tdm.NextToLastPivotLow = DemarkPivots.NextToLastPivotLow;
 
+                tdm.FindPivotLowBreak(model.candles.ToList());
                 // generate a png
 
                 MLResult result2 = DoTwoBarLive(mlEngine2bar, model);
@@ -111,6 +115,13 @@ namespace CandlePatternML
 
             }
 
+            // find tickers that have a demark pivot break
+            foreach (var v in TickerDataModelList.Where(m => m.PivotHighTrendBreak != null))
+            {
+                Console.WriteLine("pivot high break for " + v.Ticker);
+             //   drawpic(v.Ticker,v.oCandleModel,v.NextToLastPivotHigh,v.LatestPivotHigh, v.PivotHighTrendBreak);
+            }
+
             /*
              * Generate a graphic for the succesul patterns. we start with shorter
              * patterns and allow the longer patterns to overwrite the shorter ones
@@ -120,8 +131,17 @@ namespace CandlePatternML
             foreach (var r in resultlist2bar.Where(m => m.Success))
             {
                 if (!tickersinplay.Contains(r.Ticker)) tickersinplay.Add(r.Ticker);
+                TickerListRowDataModel tdm = TickerDataModelList.Find(m => m.Ticker == r.Ticker);
 
-                SchwabLib.Charting.GeneratePNG(r.CandleModel, 30, $"c:\\work\\charts\\{r.Ticker}.png", -2);
+                //v.NextToLastPivotHigh, v.LatestPivotHigh, v.PivotHighTrendBreak);
+
+
+                SchwabLib.Charting.GeneratePNG(r.CandleModel,
+                    30, 
+                    $"c:\\work\\charts\\{r.Ticker}.png", 
+                    -2,
+                     tdm.NextToLastPivotHigh, tdm.LatestPivotHigh, tdm.PivotHighTrendBreak
+                    );
                 Console.WriteLine($"{r.Ticker}  {r.Success}Confidence: {r.Confidence:P1}");
             }
 
@@ -129,7 +149,17 @@ namespace CandlePatternML
             foreach (var r in resultlist3bar.Where(m => m.Success))
             {
                 if (!tickersinplay.Contains(r.Ticker)) tickersinplay.Add(r.Ticker);
-                SchwabLib.Charting.GeneratePNG(r.CandleModel, 30, $"c:\\work\\charts\\{r.Ticker}.png", -3);
+
+                TickerListRowDataModel tdm = TickerDataModelList.Find(m => m.Ticker == r.Ticker);
+
+                //v.NextToLastPivotHigh, v.LatestPivotHigh, v.PivotHighTrendBreak);
+
+                SchwabLib.Charting.GeneratePNG(r.CandleModel, 
+                    30,
+                    $"c:\\work\\charts\\{r.Ticker}.png",
+                    -3,
+                     tdm.NextToLastPivotHigh, tdm.LatestPivotHigh, tdm.PivotHighTrendBreak
+                    );
                 Console.WriteLine($"{r.Ticker} {r.Success} Confidence: {r.Confidence:P1}");
             }
 
@@ -137,7 +167,17 @@ namespace CandlePatternML
             foreach (var r in resultlist4bar.Where(m => m.Success))
             {
                 if (!tickersinplay.Contains(r.Ticker)) tickersinplay.Add(r.Ticker);
-                SchwabLib.Charting.GeneratePNG(r.CandleModel, 30, $"c:\\work\\charts\\{r.Ticker}.png", -4);
+
+                TickerListRowDataModel tdm = TickerDataModelList.Find(m => m.Ticker == r.Ticker);
+
+                //v.NextToLastPivotHigh, v.LatestPivotHigh, v.PivotHighTrendBreak);
+
+                SchwabLib.Charting.GeneratePNG(r.CandleModel, 
+                    30, 
+                    $"c:\\work\\charts\\{r.Ticker}.png", 
+                    -4,
+                    tdm.NextToLastPivotHigh, tdm.LatestPivotHigh, tdm.PivotHighTrendBreak
+                    );
                 Console.WriteLine($"{r.Ticker} {r.Success} Confidence: {r.Confidence:P1}");
             }
 
@@ -146,7 +186,16 @@ namespace CandlePatternML
             foreach (var r in resultlist5bar.Where(m => m.Success))
             {
                 if (!tickersinplay.Contains(r.Ticker)) tickersinplay.Add(r.Ticker);
-                SchwabLib.Charting.GeneratePNG(r.CandleModel, 30, $"c:\\work\\charts\\{r.Ticker}.png", -5);
+
+                TickerListRowDataModel tdm = TickerDataModelList.Find(m => m.Ticker == r.Ticker);
+
+                //v.NextToLastPivotHigh, v.LatestPivotHigh, v.PivotHighTrendBreak);
+
+                SchwabLib.Charting.GeneratePNG(r.CandleModel,
+                    30, 
+                    $"c:\\work\\charts\\{r.Ticker}.png",
+                    -5,
+                    tdm.NextToLastPivotHigh, tdm.LatestPivotHigh, tdm.PivotHighTrendBreak);
                 Console.WriteLine($"{r.Ticker} {r.Success} Confidence: {r.Confidence:P1}");
             }
 
@@ -155,7 +204,15 @@ namespace CandlePatternML
             foreach (var r in resultRSI4bar.Where(m => m.Success))
             {
                 if (!tickersinplay.Contains(r.Ticker)) tickersinplay.Add(r.Ticker);
-                SchwabLib.Charting.GeneratePNG(r.CandleModel, 30, $"c:\\work\\charts\\{r.Ticker}.png", -1);
+
+                TickerListRowDataModel tdm = TickerDataModelList.Find(m => m.Ticker == r.Ticker);
+
+                SchwabLib.Charting.GeneratePNG(r.CandleModel, 
+                    30, 
+                    $"c:\\work\\charts\\{r.Ticker}.png", 
+                    -1,
+                    tdm.NextToLastPivotHigh, tdm.LatestPivotHigh, tdm.PivotHighTrendBreak
+                    );
                 Console.WriteLine($"{r.Ticker} {r.Success} Confidence: {r.Confidence:P1}");
             }
 
