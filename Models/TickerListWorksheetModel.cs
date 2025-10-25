@@ -22,9 +22,19 @@ namespace CandlePatternML
         public PivotPointModel NextToLastPivotHigh { get; set; }
         public Candle? PivotHighTrendBreak { get; set; }
 
+        // if we don't already have a trend line break we want to know at what price the trend line would be broken
+        // this field will be used to estimate what price would need to break in the next
+        // day's candle in order to break the trend line, and can be used to set an alert
+        public decimal? ForecastedPivotHighTrendBreak { get; set; }
+
         public PivotPointModel LatestPivotLow { get; set; }
         public PivotPointModel NextToLastPivotLow { get; set; }
         public Candle? PivotLowTrendBreak { get; set; }
+
+        // if we don't already have a trend line break we want to know at what price the trend line would be broken
+        // this field will be used to estimate what price would need to break in the next
+        // day's candle in order to break the trend line, and can be used to set an alert
+        public decimal? ForecastedPivotLowTrendBreak { get; set; }
 
         // given a list of candle data, find the first candle that breaks the pivot high downtrend
 
@@ -59,6 +69,13 @@ namespace CandlePatternML
                     PivotHighTrendBreak = candles[i];
                     break;
                 }
+            }
+
+            // if we don't have a trend line that has not been broken yet
+            // compute the forecasted value for the next candle
+            if (PivotHighTrendBreak == null)
+            {
+                ForecastedPivotHighTrendBreak = (decimal)(CurrentEndValue + slope);
             }
         }
 

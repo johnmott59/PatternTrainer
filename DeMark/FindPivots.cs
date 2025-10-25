@@ -19,8 +19,6 @@ namespace CandlePatternML
         public PivotPointModel NextToLastPivotHigh { get; set; }
         public PivotPointModel LatestPivotLow { get; set; }
         public PivotPointModel NextToLastPivotLow { get; set; }
-        public List<PivotPointModel> AllPivotHighs { get; set; } = new List<PivotPointModel>();
-        public List<PivotPointModel> AllPivotLows { get; set; } = new List<PivotPointModel>();
         
         public bool HasValidPattern => 
             LatestPivotHigh != null && NextToLastPivotHigh != null && 
@@ -82,7 +80,6 @@ namespace CandlePatternML
                         candleList[currentIndex + 2], 
                         currentIndex + 2
                     );
-                    result.AllPivotHighs.Add(result.LatestPivotHigh);
                     noPivotHighCurrent = false;
                 }
                 else
@@ -109,7 +106,6 @@ namespace CandlePatternML
                         if (priorPivot.Value > result.LatestPivotHigh.Value)
                         {
                             result.NextToLastPivotHigh = priorPivot;
-                            result.AllPivotHighs.Add(priorPivot);
                             noPivotHighPrior = false;
                         }
                         else
@@ -146,7 +142,6 @@ namespace CandlePatternML
                         candleList[currentIndex + 2], 
                         currentIndex + 2
                     );
-                    result.AllPivotLows.Add(result.LatestPivotLow);
                     noPivotLowCurrent = false;
                 }
                 else
@@ -173,7 +168,6 @@ namespace CandlePatternML
                         if (priorPivot.Value < result.LatestPivotLow.Value)
                         {
                             result.NextToLastPivotLow = priorPivot;
-                            result.AllPivotLows.Add(priorPivot);
                             noPivotLowPrior = false;
                         }
                         else
@@ -242,52 +236,6 @@ namespace CandlePatternML
                    t2.low < t4.low ;
         }
 
-        /// <summary>
-        /// Prints the results of pivot analysis to console
-        /// </summary>
-        public void PrintPivotResults(PivotAnalysisResult result)
-        {
-            Console.WriteLine("=== Pivot Analysis Results ===");
-            
-            if (result.LatestPivotHigh != null)
-            {
-                Console.WriteLine($"Current Pivot High: {result.LatestPivotHigh.Value} on date {result.LatestPivotHigh.Candle.dtDotNet.ToShortDateString()}");
-            }
-            else
-            {
-                Console.WriteLine("No current pivot high found");
-            }
-            
-            if (result.NextToLastPivotHigh != null)
-            {
-                Console.WriteLine($"Prior Pivot High: {result.NextToLastPivotHigh.Value} on date {result.NextToLastPivotHigh.Candle.dtDotNet.ToShortDateString()}");
-            }
-            else
-            {
-                Console.WriteLine("No prior pivot high found");
-            }
-            
-            if (result.LatestPivotLow != null)
-            {
-                Console.WriteLine($"Current Pivot Low: {result.LatestPivotLow.Value} at date {result.LatestPivotLow.Candle.dtDotNet.ToShortDateString()}");
-            }
-            else
-            {
-                Console.WriteLine("No current pivot low found");
-            }
-            
-            if (result.NextToLastPivotLow != null)
-            {
-                Console.WriteLine($"Prior Pivot Low: {result.NextToLastPivotLow.Value} at index {result.NextToLastPivotLow.Candle.dtDotNet.ToShortDateString()}");
-            }
-            else
-            {
-                Console.WriteLine("No prior pivot low found");
-            }
-            
-            Console.WriteLine($"Valid DeMark Pattern: {result.HasValidPattern}");
-            Console.WriteLine($"Total Pivot Highs Found: {result.AllPivotHighs.Count}");
-            Console.WriteLine($"Total Pivot Lows Found: {result.AllPivotLows.Count}");
-        }
+
     }
 }

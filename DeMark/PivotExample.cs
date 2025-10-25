@@ -19,58 +19,14 @@ namespace CandlePatternML
 
             // Find pivots
             var result = FindPivots(candleList);
-            
-            // Print results
-            PrintPivotResults(result);
+
 
             return result;
             
-            // Additional analysis
-           // AnalyzeResults(result);
         }
         
 
-         
-        /// <summary>
-        /// Performs additional analysis on the pivot results
-        /// </summary>
-        private static void AnalyzeResults(PivotAnalysisResult result)
-        {
-            Console.WriteLine("\n=== Additional Analysis ===");
-            
-            if (result.HasValidPattern)
-            {
-                Console.WriteLine("✅ Valid DeMark pattern detected!");
-                Console.WriteLine($"   - Descending highs: {result.NextToLastPivotHigh.Value} > {result.LatestPivotHigh.Value}");
-                Console.WriteLine($"   - Ascending lows: {result.NextToLastPivotLow.Value} < {result.LatestPivotLow.Value}");
-            }
-            else
-            {
-                Console.WriteLine("❌ No valid DeMark pattern found");
-                
-                if (result.LatestPivotHigh == null)
-                    Console.WriteLine("   - Missing current pivot high");
-                if (result.NextToLastPivotHigh == null)
-                    Console.WriteLine("   - Missing prior pivot high");
-                if (result.LatestPivotLow == null)
-                    Console.WriteLine("   - Missing current pivot low");
-                if (result.NextToLastPivotLow == null)
-                    Console.WriteLine("   - Missing prior pivot low");
-            }
-            
-            // Show all found pivots
-            Console.WriteLine("\nAll Pivot Highs:");
-            foreach (var pivot in result.AllPivotHighs)
-            {
-                Console.WriteLine($"   - Value: {pivot.Value}, Index: {pivot.Index}");
-            }
-            
-            Console.WriteLine("\nAll Pivot Lows:");
-            foreach (var pivot in result.AllPivotLows)
-            {
-                Console.WriteLine($"   - Value: {pivot.Value}, Index: {pivot.Index}");
-            }
-        }
+
     }
 }
 
