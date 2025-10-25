@@ -96,7 +96,7 @@ namespace CandlePatternML
             double slope = (double)(LatestPivotLow.Value - NextToLastPivotLow.Value)
                 / (double)candleCountinRun;
 
-            // for each candle after the last pivot high, compute the estimated value along 
+            // for each candle after the last pivot low, compute the estimated value along 
             // the slope and see if the candle close breaks that value
             double CurrentEndValue = (double)LatestPivotLow.Value;
             for (int i = latestPivotIndex + 1; i < candles.Count; i++)
@@ -110,6 +110,12 @@ namespace CandlePatternML
                     PivotLowTrendBreak = candles[i];
                     break;
                 }
+            }
+
+            // compute the forecasted value for the next candle
+            if (PivotLowTrendBreak == null)
+            {
+                ForecastedPivotLowTrendBreak = (decimal)(CurrentEndValue + slope);
             }
         }
 

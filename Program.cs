@@ -88,10 +88,19 @@ namespace CandlePatternML
                 // see if we have a break of the pivot high downtrend
                 tdm.FindPivotHighBreak(model.candles.ToList());
 
+                // save any recent break and any projected break in trend
+                DemarkPivots.TrendHighBreakDate = tdm.PivotHighTrendBreak?.dtDotNet;
+                DemarkPivots.ProjectedTrendHighBreakValue = tdm.ForecastedPivotHighTrendBreak;
+
                 tdm.LatestPivotLow = DemarkPivots.LatestPivotLow;
                 tdm.NextToLastPivotLow = DemarkPivots.NextToLastPivotLow;
 
                 tdm.FindPivotLowBreak(model.candles.ToList());
+
+                // save any recent break and any projected break in trend
+                DemarkPivots.TrendLowBreakDate = tdm.PivotLowTrendBreak?.dtDotNet;
+                DemarkPivots.ProjectedTrendLowBreakValue = tdm.ForecastedPivotLowTrendBreak;
+
                 // generate a png
 
                 MLResult result2 = DoTwoBarLive(mlEngine2bar, model);
