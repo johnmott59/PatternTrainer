@@ -13,24 +13,7 @@ namespace CandlePatternML
     /// <summary>
     /// Contains the results of pivot analysis
     /// </summary>
-    public class PivotAnalysisResult
-    {
-        public PivotPointModel LatestPivotHigh { get; set; }
-        public PivotPointModel NextToLastPivotHigh { get; set; }
-        public DateTime? TrendHighBreakDate { get; set; }
-        public decimal? ProjectedTrendHighBreakValue { get; set; }
 
-        public PivotPointModel LatestPivotLow { get; set; }
-        public PivotPointModel NextToLastPivotLow { get; set; }
-        public DateTime? TrendLowBreakDate { get; set; }
-        public decimal? ProjectedTrendLowBreakValue { get; set; }
-
-        public bool HasValidPattern => 
-            LatestPivotHigh != null && NextToLastPivotHigh != null && 
-            LatestPivotLow != null && NextToLastPivotLow != null &&
-            NextToLastPivotHigh.Value > LatestPivotHigh.Value && // Descending highs
-            NextToLastPivotLow.Value < LatestPivotLow.Value;     // Ascending lows
-    }
 
     public partial class Program
     {
@@ -39,7 +22,7 @@ namespace CandlePatternML
         /// </summary>
         /// <param name="candleList">List of candles to analyze (most recent first)</param>
         /// <returns>PivotAnalysisResult containing all found pivots</returns>
-        public PivotAnalysisResult FindPivots(List<Candle> candleList)
+        public DemarkPivotModel FindPivots(List<Candle> candleList)
         {
 
             // invert the candle list so we find the most recent pivots first
@@ -48,7 +31,7 @@ namespace CandlePatternML
 
             string authKey = GetAuthKey();
 
-            var result = new PivotAnalysisResult();
+            var result = new DemarkPivotModel();
             
             if (candleList == null || candleList.Count < 5)
             {
@@ -68,7 +51,7 @@ namespace CandlePatternML
         /// <summary>
         /// Finds pivot highs using the DeMark methodology
         /// </summary>
-        private void FindPivotHighs(List<Candle> candleList, PivotAnalysisResult result)
+        private void FindPivotHighs(List<Candle> candleList, DemarkPivotModel result)
         {
             // Start from the most recent candle (index 0) and work backwards
             int currentIndex = 0;
@@ -129,7 +112,7 @@ namespace CandlePatternML
         /// <summary>
         /// Finds pivot lows using the DeMark methodology
         /// </summary>
-        private void FindPivotLows(List<Candle> candleList, PivotAnalysisResult result)
+        private void FindPivotLows(List<Candle> candleList, DemarkPivotModel result)
         {
             // Start from the most recent candle (index 0) and work backwards
             int currentIndex = 0;

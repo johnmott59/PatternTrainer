@@ -27,7 +27,7 @@ namespace PatternTrainer
         public List<WorkSheetRowData> Rows { get; set; } = new List<WorkSheetRowData>();
     
         public void AddTicker(string ticker,
-            PivotAnalysisResult DemarkPivots,
+            DemarkPivotModel DemarkPivots,
             MLResult ml2BarResults,
             MLResult ml3BarResults, 
             MLResult ml4BarResults,
@@ -49,7 +49,7 @@ namespace PatternTrainer
     public class WorkSheetRowData
     {
         public string Ticker { get; set; }
-        public PivotAnalysisResult DemarkPivots { get; set; }
+        public DemarkPivotModel DemarkPivots { get; set; }
         public MLResult ml3BarResults { get; set; }
         public MLResult ml2BarResults { get; set; }
         public MLResult ml4BarResults { get; set; }

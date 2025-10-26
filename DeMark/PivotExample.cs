@@ -14,7 +14,7 @@ namespace CandlePatternML
         /// <summary>
         /// Demonstrates how to use the pivot finding functionality
         /// </summary>
-        public PivotAnalysisResult FindDemarkPivots(List<Candle> candleList)
+        public DemarkPivotModel FindDemarkPivots(List<Candle> candleList)
         {
 
             // Find pivots
