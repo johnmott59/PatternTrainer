@@ -89,6 +89,7 @@ namespace CandlePatternML
                 // save all candle data so we can draw a chart
                 tdm.oCandleModel = model;
 
+#if false
                 // update this ticker data model with the pivots
                 tdm.LatestPivotHigh = DemarkPivots.LatestPivotHigh;
                 tdm.NextToLastPivotHigh = DemarkPivots.NextToLastPivotHigh;
@@ -108,6 +109,7 @@ namespace CandlePatternML
                 // save any recent break and any projected break in trend
                 DemarkPivots.PivotLowTrendBreakDate = tdm.PivotLowTrendBreak?.dtDotNet;
                 DemarkPivots.ForecastedPivotLowTrendBreak = tdm.ForecastedPivotLowTrendBreak;
+#endif
 
                 // generate a png
 
