@@ -26,19 +26,17 @@ namespace CandlePatternML
         /// </summary>
         /// <param name="candleList">List of candles to analyze (most recent first)</param>
         /// <returns>PivotAnalysisResult containing all found pivots</returns>
-        public DemarkPivotModel FindPivots(List<Candle> candleList,string authkey)
+        public bool FindPivots(List<Candle> candleList,string authkey)
         {
 
             // invert the candle list so we find the most recent pivots first
 
             candleList.Reverse();
-
-            var result = new DemarkPivotModel();
-
+         
             if (candleList == null || candleList.Count < 5)
             {
                 Console.WriteLine("Insufficient data for pivot analysis. Need at least 5 candles.");
-                return result;
+                return false;
             }
 
             // Find current and prior pivot highs
@@ -47,7 +45,7 @@ namespace CandlePatternML
             // Find current and prior pivot lows
             FindPivotLows(candleList);
 
-            return result;
+            return true;
         }
 
         /// <summary>
