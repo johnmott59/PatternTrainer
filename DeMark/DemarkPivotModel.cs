@@ -5,21 +5,56 @@ using SchwabLib;
 using SchwabLib.Models;
 using System;
 using System.Collections.Generic;
+using System.Windows.Controls;
+using System.Windows.Navigation;
+using System.Xml.Linq;
 
 
 namespace CandlePatternML
 {
-    public class DemarkPivotModel
+    public class DemarkPivotModel : IEquatable<DemarkPivotModel>
+
     {
         public PivotPointModel LatestPivotHigh { get; set; }
         public PivotPointModel NextToLastPivotHigh { get; set; }
-        public DateTime? TrendHighBreakDate { get; set; }
-        public decimal? ProjectedTrendHighBreakValue { get; set; }
+        public DateTime? PivotHighTrendBreakDate { get; set; }
+        public decimal? ForecastedPivotHighTrendBreak { get; set; }
 
         public PivotPointModel LatestPivotLow { get; set; }
         public PivotPointModel NextToLastPivotLow { get; set; }
-        public DateTime? TrendLowBreakDate { get; set; }
-        public decimal? ProjectedTrendLowBreakValue { get; set; }
+        public DateTime? PivotLowTrendBreakDate { get; set; }
+        public decimal? ForecastedPivotLowTrendBreak { get; set; }
+
+        public bool Equals(DemarkPivotModel other)
+        {
+            bool result = true;
+
+            // handle null conditions
+            if (other is null) return false;
+            if (LatestPivotHigh == null && other.LatestPivotHigh != null) return false;
+            if (NextToLastPivotHigh == null && other.NextToLastPivotHigh != null) return false;
+            if (LatestPivotLow == null && other.LatestPivotLow != null) return false;
+            if (NextToLastPivotLow == null && other.NextToLastPivotLow != null) return false;
+            if (PivotHighTrendBreakDate == null && other.PivotHighTrendBreakDate != null) return false;
+            if (ForecastedPivotHighTrendBreak == null && other.ForecastedPivotHighTrendBreak != null) return false;
+            if (PivotLowTrendBreakDate == null && other.PivotLowTrendBreakDate != null) return false;
+            if (ForecastedPivotLowTrendBreak == null && other.ForecastedPivotLowTrendBreak != null) return false;
+
+
+            // compare values
+            if (LatestPivotHigh != null && !LatestPivotHigh.Equals(other.LatestPivotHigh)) return false;
+            if (NextToLastPivotHigh != null && !NextToLastPivotHigh.Equals(other.NextToLastPivotHigh)) return false;
+            if (LatestPivotLow != null && !LatestPivotLow.Equals(other.LatestPivotLow)) return false;
+            if (NextToLastPivotLow != null && !NextToLastPivotLow.Equals(other.NextToLastPivotLow)) return false;
+            if (PivotHighTrendBreakDate != null && !PivotHighTrendBreakDate.Equals(other.PivotHighTrendBreakDate)) return false;
+            if (ForecastedPivotHighTrendBreak != null && !ForecastedPivotHighTrendBreak.Equals(other.ForecastedPivotHighTrendBreak)) return false;
+            if (PivotLowTrendBreakDate != null && !PivotLowTrendBreakDate.Equals(other.PivotLowTrendBreakDate)) return false;
+            if (ForecastedPivotLowTrendBreak != null && !ForecastedPivotLowTrendBreak.Equals(other.ForecastedPivotLowTrendBreak)) return false;
+
+            return true;
+
+        }
+        
 
         /// <summary>
         /// Finds pivot highs and lows in a list of candles using DeMark methodology
@@ -44,6 +79,16 @@ namespace CandlePatternML
 
             // Find current and prior pivot lows
             FindPivotLows(candleList);
+
+            // go back to normal order and find the breaks of the trend lines
+
+            candleList.Reverse();
+
+            // find pivot high break
+            FindPivotHighBreak(candleList);
+
+            // find pivot low break
+            FindPivotLowBreak(candleList);
 
             return true;
         }
@@ -224,7 +269,86 @@ namespace CandlePatternML
                    t2.low < t4.low;
         }
 
+        public void FindPivotHighBreak(List<Candle> candles)
+        {
+            // locate the candle after the latest pivot high
+            if (LatestPivotHigh == null || NextToLastPivotHigh == null)
+            {
+                return;
+            }
+            int latestPivotIndex = candles.FindIndex(c => c.dtDotNet == LatestPivotHigh.dtCandle);
+            if (latestPivotIndex == -1 || latestPivotIndex + 1 >= candles.Count)
+            {
+                return;
+            }
 
+            int candleCountinRun = NextToLastPivotHigh.Index - LatestPivotHigh.Index;
+            double slope = (double)(LatestPivotHigh.Value - NextToLastPivotHigh.Value)
+                / (double)candleCountinRun;
+
+            // for each candle after the last pivot high, compute the estimated value along 
+            // the slope and see if the candle close breaks that value
+            double CurrentEndValue = (double)LatestPivotHigh.Value;
+            for (int i = latestPivotIndex + 1; i < candles.Count; i++)
+            {
+                // see where the downtrend line is at this candle
+                CurrentEndValue += slope;
+                // see if this candle close breaks that value
+                if (candles[i].close > (decimal)CurrentEndValue)
+                {
+                    // we have a break of the downtrend
+                    PivotHighTrendBreakDate = candles[i].dtDotNet;
+                    break;
+                }
+            }
+
+            // if we don't have a trend line that has not been broken yet
+            // compute the forecasted value for the next candle
+            if (PivotHighTrendBreakDate == null)
+            {
+                ForecastedPivotHighTrendBreak = (decimal)(CurrentEndValue + slope);
+            }
+        }
+
+        public void FindPivotLowBreak(List<Candle> candles)
+        {
+            // locate the candle after the latest pivot low
+            if (LatestPivotLow == null || NextToLastPivotLow == null)
+            {
+                return;
+            }
+            int latestPivotIndex = candles.FindIndex(c => c.dtDotNet == LatestPivotLow.dtCandle);
+            if (latestPivotIndex == -1 || latestPivotIndex + 1 >= candles.Count)
+            {
+                return;
+            }
+
+            int candleCountinRun = NextToLastPivotLow.Index - LatestPivotLow.Index;
+            double slope = (double)(LatestPivotLow.Value - NextToLastPivotLow.Value)
+                / (double)candleCountinRun;
+
+            // for each candle after the last pivot low, compute the estimated value along 
+            // the slope and see if the candle close breaks that value
+            double CurrentEndValue = (double)LatestPivotLow.Value;
+            for (int i = latestPivotIndex + 1; i < candles.Count; i++)
+            {
+                // see where the downtrend line is at this candle
+                CurrentEndValue += slope;
+                // see if this candle close breaks that value
+                if (candles[i].close < (decimal)CurrentEndValue)
+                {
+                    // we have a break of the downtrend
+                    PivotLowTrendBreakDate = candles[i].dtDotNet;
+                    break;
+                }
+            }
+
+            // compute the forecasted value for the next candle
+            if (PivotLowTrendBreakDate == null)
+            {
+                ForecastedPivotLowTrendBreak = (decimal)(CurrentEndValue + slope);
+            }
+        }
 
     }
 

@@ -73,9 +73,17 @@ namespace CandlePatternML
                     continue;
                 }
 
+                DemarkPivotModel DemarkPivots = new DemarkPivotModel();
+                DemarkPivots.FindPivots(model.candles.ToList(), GetAuthKey());
+#if false
                 // find recent pivots
-                var DemarkPivots =  FindDemarkPivots(model.candles.ToList());
+                var xxx =  FindDemarkPivots(model.candles.ToList());
 
+                if (!xxx.Equals(DemarkPivots))
+                {
+                    Console.WriteLine("diferent values");
+                }
+#endif
                 // save the most recent close
                 tdm.LastClose = model.candles[^1].close;
                 // save all candle data so we can draw a chart
@@ -89,8 +97,8 @@ namespace CandlePatternML
                 tdm.FindPivotHighBreak(model.candles.ToList());
 
                 // save any recent break and any projected break in trend
-                DemarkPivots.TrendHighBreakDate = tdm.PivotHighTrendBreak?.dtDotNet;
-                DemarkPivots.ProjectedTrendHighBreakValue = tdm.ForecastedPivotHighTrendBreak;
+                DemarkPivots.PivotHighTrendBreakDate = tdm.PivotHighTrendBreak?.dtDotNet;
+                DemarkPivots.ForecastedPivotHighTrendBreak = tdm.ForecastedPivotHighTrendBreak;
 
                 tdm.LatestPivotLow = DemarkPivots.LatestPivotLow;
                 tdm.NextToLastPivotLow = DemarkPivots.NextToLastPivotLow;
@@ -98,8 +106,8 @@ namespace CandlePatternML
                 tdm.FindPivotLowBreak(model.candles.ToList());
 
                 // save any recent break and any projected break in trend
-                DemarkPivots.TrendLowBreakDate = tdm.PivotLowTrendBreak?.dtDotNet;
-                DemarkPivots.ProjectedTrendLowBreakValue = tdm.ForecastedPivotLowTrendBreak;
+                DemarkPivots.PivotLowTrendBreakDate = tdm.PivotLowTrendBreak?.dtDotNet;
+                DemarkPivots.ForecastedPivotLowTrendBreak = tdm.ForecastedPivotLowTrendBreak;
 
                 // generate a png
 

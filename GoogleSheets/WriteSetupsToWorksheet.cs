@@ -50,12 +50,12 @@ namespace CandlePatternML
                  * If there is a high trend line see if we have either break of the line
                  * or a projection of when it will be broken
                  */
-                if (v.DemarkPivots.TrendHighBreakDate != null)
+                if (v.DemarkPivots.PivotHighTrendBreakDate != null)
                 {
-                    worksheet.SetValue(rowindex, "B", v.DemarkPivots.TrendHighBreakDate?.ToShortDateString());
-                } else if (v.DemarkPivots.ProjectedTrendHighBreakValue != null)
+                    worksheet.SetValue(rowindex, "B", v.DemarkPivots.PivotHighTrendBreakDate?.ToShortDateString());
+                } else if (v.DemarkPivots.ForecastedPivotHighTrendBreak != null)
                 {
-                    worksheet.SetValue(rowindex, "C", v.DemarkPivots.ProjectedTrendHighBreakValue?.ToString("F2"));
+                    worksheet.SetValue(rowindex, "C", v.DemarkPivots.ForecastedPivotHighTrendBreak?.ToString("F2"));
                 }
 
                 if (v.ml2BarResults.Success)
