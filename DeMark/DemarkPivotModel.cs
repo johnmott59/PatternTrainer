@@ -42,10 +42,10 @@ namespace CandlePatternML
             }
 
             // Find current and prior pivot highs
-            FindPivotHighs(candleList, result);
+            FindPivotHighs(candleList);
 
             // Find current and prior pivot lows
-            FindPivotLows(candleList, result);
+            FindPivotLows(candleList);
 
             return result;
         }
@@ -53,7 +53,7 @@ namespace CandlePatternML
         /// <summary>
         /// Finds pivot highs using the DeMark methodology
         /// </summary>
-        private void FindPivotHighs(List<Candle> candleList, DemarkPivotModel result)
+        private void FindPivotHighs(List<Candle> candleList)
         {
             // Start from the most recent candle (index 0) and work backwards
             int currentIndex = 0;
@@ -65,7 +65,7 @@ namespace CandlePatternML
             {
                 if (IsPivotHigh(candleList, currentIndex))
                 {
-                    result.LatestPivotHigh = new PivotPointModel(
+                    LatestPivotHigh = new PivotPointModel(
                         candleList[currentIndex + 2].high,
                         candleList[currentIndex + 2],
                         currentIndex + 2
@@ -79,9 +79,9 @@ namespace CandlePatternML
             }
 
             // Find prior pivot high (must be higher than current)
-            if (result.LatestPivotHigh != null)
+            if (LatestPivotHigh != null)
             {
-                currentIndex = result.LatestPivotHigh.Index + 1; // Start after current pivot
+                currentIndex = LatestPivotHigh.Index + 1; // Start after current pivot
                 while (noPivotHighPrior && currentIndex + 4 < candleList.Count)
                 {
                     if (IsPivotHigh(candleList, currentIndex))
@@ -93,9 +93,9 @@ namespace CandlePatternML
                         );
 
                         // Check if this prior pivot is higher than current (descending pattern)
-                        if (priorPivot.Value > result.LatestPivotHigh.Value)
+                        if (priorPivot.Value > LatestPivotHigh.Value)
                         {
-                            result.NextToLastPivotHigh = priorPivot;
+                            NextToLastPivotHigh = priorPivot;
                             noPivotHighPrior = false;
                         }
                         else
@@ -114,7 +114,7 @@ namespace CandlePatternML
         /// <summary>
         /// Finds pivot lows using the DeMark methodology
         /// </summary>
-        private void FindPivotLows(List<Candle> candleList, DemarkPivotModel result)
+        private void FindPivotLows(List<Candle> candleList)
         {
             // Start from the most recent candle (index 0) and work backwards
             int currentIndex = 0;
@@ -127,7 +127,7 @@ namespace CandlePatternML
                 Console.WriteLine($"current date {candleList[currentIndex].dtDotNet.ToShortDateString()}");
                 if (IsPivotLow(candleList, currentIndex))
                 {
-                    result.LatestPivotLow = new PivotPointModel(
+                    LatestPivotLow = new PivotPointModel(
                         candleList[currentIndex + 2].low,
                         candleList[currentIndex + 2],
                         currentIndex + 2
@@ -141,9 +141,9 @@ namespace CandlePatternML
             }
 
             // Find prior pivot low (must be lower than current)
-            if (result.LatestPivotLow != null)
+            if (LatestPivotLow != null)
             {
-                currentIndex = result.LatestPivotLow.Index + 1; // Start after current pivot
+                currentIndex = LatestPivotLow.Index + 1; // Start after current pivot
                 while (noPivotLowPrior && currentIndex + 4 < candleList.Count)
                 {
                     if (IsPivotLow(candleList, currentIndex))
@@ -155,9 +155,9 @@ namespace CandlePatternML
                         );
 
                         // Check if this prior pivot is lower than current (ascending pattern)
-                        if (priorPivot.Value < result.LatestPivotLow.Value)
+                        if (priorPivot.Value < LatestPivotLow.Value)
                         {
-                            result.NextToLastPivotLow = priorPivot;
+                            NextToLastPivotLow = priorPivot;
                             noPivotLowPrior = false;
                         }
                         else
