@@ -13,7 +13,6 @@ using System.Xml.Linq;
 namespace CandlePatternML
 {
     public class DemarkPivotModel : IEquatable<DemarkPivotModel>
-
     {
         public PivotPointModel LatestPivotHigh { get; set; }
         public PivotPointModel NextToLastPivotHigh { get; set; }
