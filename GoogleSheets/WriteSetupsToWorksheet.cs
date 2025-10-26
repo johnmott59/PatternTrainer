@@ -46,30 +46,42 @@ namespace CandlePatternML
                 
                 worksheet.SetValue(rowindex, "A",v.Ticker);
 
+                /*
+                 * If there is a high trend line see if we have either break of the line
+                 * or a projection of when it will be broken
+                 */
+                if (v.DemarkPivots.TrendHighBreakDate != null)
+                {
+                    worksheet.SetValue(rowindex, "B", v.DemarkPivots.TrendHighBreakDate?.ToShortDateString());
+                } else if (v.DemarkPivots.ProjectedTrendHighBreakValue != null)
+                {
+                    worksheet.SetValue(rowindex, "C", v.DemarkPivots.ProjectedTrendHighBreakValue?.ToString("F2"));
+                }
+
                 if (v.ml2BarResults.Success)
                 {
-                    worksheet.SetValue(rowindex, "B", v.ml2BarResults.Success);
-                    worksheet.SetValue(rowindex, "C", v.ml2BarResults.Notice);
+                    worksheet.SetValue(rowindex, "D", v.ml2BarResults.Success);
+                    worksheet.SetValue(rowindex, "E", v.ml2BarResults.Notice);
                 }
 
                 if (v.ml3BarResults.Success)
                 {
-                    worksheet.SetValue(rowindex, "D", v.ml3BarResults.Confidence.ToString("F2"));
+                    worksheet.SetValue(rowindex, "F", v.ml3BarResults.Confidence.ToString("F2"));
                 }
 
                 if (v.ml4BarResults.Success)
                 {
-                    worksheet.SetValue(rowindex, "E", v.ml4BarResults.Confidence.ToString("F2"));
+                    worksheet.SetValue(rowindex, "G", v.ml4BarResults.Confidence.ToString("F2"));
                 }
 
                 if (v.ml5BarResults.Success)
                 {
-                    worksheet.SetValue(rowindex, "F", v.ml5BarResults.Confidence.ToString("F2"));
+                    worksheet.SetValue(rowindex, "H", v.ml5BarResults.Confidence.ToString("F2"));
                 }
 
                 if (v.RSI4Results.Success)
                 {
-                    worksheet.SetValue(rowindex, "G", v.RSI4Results.Confidence.ToString("F2"));
+                    worksheet.SetValue(rowindex, "I", v.RSI4Results.Confidence.ToString("F2"));
                 }
                 rowindex++;
             }
