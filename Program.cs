@@ -88,6 +88,8 @@ namespace CandlePatternML
                 tdm.LastClose = model.candles[^1].close;
                 // save all candle data so we can draw a chart
                 tdm.oCandleModel = model;
+                // save pivot information
+                tdm.oDemarkPivotModel = DemarkPivots;
 
 #if false
                 // update this ticker data model with the pivots
@@ -134,13 +136,6 @@ namespace CandlePatternML
 
             }
 
-            // find tickers that have a demark pivot break
-            foreach (var v in TickerDataModelList.Where(m => m.PivotHighTrendBreak != null))
-            {
-                Console.WriteLine("pivot high break for " + v.Ticker);
-             //   drawpic(v.Ticker,v.oCandleModel,v.NextToLastPivotHigh,v.LatestPivotHigh, v.PivotHighTrendBreak);
-            }
-
             /*
              * Generate a graphic for the succesul patterns. we start with shorter
              * patterns and allow the longer patterns to overwrite the shorter ones
@@ -159,7 +154,8 @@ namespace CandlePatternML
                     30, 
                     $"c:\\work\\charts\\{r.Ticker}.png", 
                     -2,
-                     tdm.NextToLastPivotHigh, tdm.LatestPivotHigh, tdm.PivotHighTrendBreak
+                     tdm.oDemarkPivotModel.NextToLastPivotHigh,
+                     tdm.oDemarkPivotModel.LatestPivotHigh
                     );
                 Console.WriteLine($"{r.Ticker}  {r.Success}Confidence: {r.Confidence:P1}");
             }
@@ -177,7 +173,8 @@ namespace CandlePatternML
                     30,
                     $"c:\\work\\charts\\{r.Ticker}.png",
                     -3,
-                     tdm.NextToLastPivotHigh, tdm.LatestPivotHigh, tdm.PivotHighTrendBreak
+                     tdm.oDemarkPivotModel.NextToLastPivotHigh, 
+                     tdm.oDemarkPivotModel.LatestPivotHigh
                     );
                 Console.WriteLine($"{r.Ticker} {r.Success} Confidence: {r.Confidence:P1}");
             }
@@ -195,7 +192,9 @@ namespace CandlePatternML
                     30, 
                     $"c:\\work\\charts\\{r.Ticker}.png", 
                     -4,
-                    tdm.NextToLastPivotHigh, tdm.LatestPivotHigh, tdm.PivotHighTrendBreak
+                    tdm.oDemarkPivotModel.NextToLastPivotHigh, 
+                    tdm.oDemarkPivotModel.LatestPivotHigh
+                    
                     );
                 Console.WriteLine($"{r.Ticker} {r.Success} Confidence: {r.Confidence:P1}");
             }
@@ -214,7 +213,8 @@ namespace CandlePatternML
                     30, 
                     $"c:\\work\\charts\\{r.Ticker}.png",
                     -5,
-                    tdm.NextToLastPivotHigh, tdm.LatestPivotHigh, tdm.PivotHighTrendBreak);
+                    tdm.oDemarkPivotModel.NextToLastPivotHigh, 
+                    tdm.oDemarkPivotModel.LatestPivotHigh);
                 Console.WriteLine($"{r.Ticker} {r.Success} Confidence: {r.Confidence:P1}");
             }
 
@@ -230,7 +230,8 @@ namespace CandlePatternML
                     30, 
                     $"c:\\work\\charts\\{r.Ticker}.png", 
                     -1,
-                    tdm.NextToLastPivotHigh, tdm.LatestPivotHigh, tdm.PivotHighTrendBreak
+                    tdm.oDemarkPivotModel.NextToLastPivotHigh, 
+                    tdm.oDemarkPivotModel.LatestPivotHigh
                     );
                 Console.WriteLine($"{r.Ticker} {r.Success} Confidence: {r.Confidence:P1}");
             }
