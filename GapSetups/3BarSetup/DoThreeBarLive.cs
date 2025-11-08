@@ -13,11 +13,25 @@ namespace CandlePatternML
     {
         public MLResult DoThreeBarLive(MLEngineWrapper mlEngine,GetCandleModel model)
         {
+            List<string> noticeList = new List<string>();
             // get the last 4 days of candles. We need 3 bars for the pattern
             // and one day prior to see if there is a gap
 
             int length = model.candles.Length;
             List<Candle> PatternCandles = model.candles.Skip(length - 4).ToList();
+
+            Candle bar0 = PatternCandles[0]; // bar before the gap
+                                             // is the day before gap a red day?
+            if (bar0.close < bar0.open)
+            {
+                noticeList.Add("Pre Gap Red");
+            }
+            Candle bar1 = PatternCandles[1]; // gap day
+            bool GapDayGreen = bar1.close > bar1.open;
+            if (GapDayGreen == false)
+            {
+                noticeList.Add("Gap Day Red");
+            }
 
             // do we have a gap?
             if (PatternCandles[1].open <= PatternCandles[0].close) return new MLResult(model,false, 0);
@@ -69,19 +83,7 @@ namespace CandlePatternML
 
        //     Console.WriteLine($"Prediction for {model.symbol} : {(result.IsMatch ? "MATCH" : "NO MATCH")}, Probability: {result.Probability:P1}");
 
-#if false
-// graph the successful patterns
-            if (result.IsMatch)
-            {
-                patternModelList.Add(input);
-                dtList.Add(PatternCandles[1].dtDotNet);
-                outputList.Add(result);
-
-                ThreeBarSvgReporter.WriteSvgHtml($"c:\\work\\3bar_{model.symbol}.html", patternModelList, dtList, outputList);
-            }
-#endif
-
-            return new MLResult(model,result.IsMatch, result.Probability);
+            return new MLResult(model,result.IsMatch, result.Probability,noticeList);
         }
     }
 }

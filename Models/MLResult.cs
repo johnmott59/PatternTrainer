@@ -11,6 +11,17 @@ namespace CandlePatternML
 {
     public class MLResult
     {
+
+        public MLResult(GetCandleModel model, bool success, 
+            float confidence, List<string> noticeList)
+        {
+            CandleModel = model;
+            Success = success;
+            Confidence = confidence;
+            Notice = string.Join("\n", noticeList);
+        }
+
+
         public MLResult(GetCandleModel model, bool success, float confidence,string notice="")
         {
             CandleModel = model;

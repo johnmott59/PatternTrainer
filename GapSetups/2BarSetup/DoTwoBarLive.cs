@@ -65,7 +65,7 @@ namespace CandlePatternML
                 if (BelowUpperLimit && AboveLowerLimit)
                 {
                     // inside bar
-                    return new MLResult(model, true, 1, string.Join("\n",noticeList));
+                    return new MLResult(model, true, 1, noticeList);
                 }
             }
             

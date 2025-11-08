@@ -13,11 +13,25 @@ namespace CandlePatternML
     {
         public MLResult DoFourBarLive(MLEngineWrapper mlEngine,GetCandleModel model)
         {
+            List<string> noticeList = new List<string>();
             // get the last 5 days of candles. We need 4 bars for the pattern
             // and one day prior to see if there is a gap
 
             int length = model.candles.Length;
             List<Candle> PatternCandles = model.candles.Skip(length - 5).ToList();
+
+            Candle bar0 = PatternCandles[0]; // bar before the gap
+                                             // is the day before gap a red day?
+            if (bar0.close < bar0.open)
+            {
+                noticeList.Add("Pre Gap Red");
+            }
+            Candle bar1 = PatternCandles[1]; // gap day
+            bool GapDayGreen = bar1.close > bar1.open;
+            if (GapDayGreen == false)
+            {
+                noticeList.Add("Gap Day Red");
+            }
 
             // do we have a gap?
             if (PatternCandles[1].open <= PatternCandles[0].close) return new MLResult(model,false, 0);
@@ -29,15 +43,6 @@ namespace CandlePatternML
             if (PatternCandles[2].close <= PatternCandles[0].low) return new MLResult(model, false, 0);
             if (PatternCandles[3].close <= PatternCandles[0].low) return new MLResult(model, false, 0);
             if (PatternCandles[4].close <= PatternCandles[0].low) return new MLResult(model, false, 0);
-#if false
-            if (PatternCandles[2].open <= PatternCandles[0].low) return new MLResult(model, false, 0);
-            if (PatternCandles[3].open <= PatternCandles[0].low) return new MLResult(model, false, 0);
-            if (PatternCandles[4].open <= PatternCandles[0].low) return new MLResult(model, false, 0);
-
-            if (PatternCandles[2].high <= PatternCandles[0].low) return new MLResult(model, false, 0);
-            if (PatternCandles[3].high <= PatternCandles[0].low) return new MLResult(model, false, 0);
-            if (PatternCandles[4].high <= PatternCandles[0].low) return new MLResult(model, false, 0);
-#endif
 
             // check to see if the body of candle 3 is below the body of candles 1 and 2
             BodyOfCandleModel b1 = new BodyOfCandleModel(PatternCandles[1]);
@@ -53,13 +58,6 @@ namespace CandlePatternML
             if (b4 < b2 && b4 < b1) return new MLResult(model,  false, 0);
 
             if (b4 < b3 && b4 < b1) return new MLResult(model,  false, 0);
-
-#if false
-// use for graphing the patterns
-            List<ThreeBarPatternModel> patternModelList = new List<ThreeBarPatternModel>();
-            List<DateTime> dtList = new List<DateTime>();
-            List<CandlePatternOutput> outputList = new List<CandlePatternOutput>();
-#endif
 
           //  Console.WriteLine($"found gap at  {PatternCandles[1].dtDotNet.ToShortDateString()}");
             FourBarPatternModel input = new FourBarPatternModel
@@ -82,21 +80,7 @@ namespace CandlePatternML
             // run the prediction
             var result = mlEngine.predictionEngine4Bar.Predict(input);
 
-          //  Console.WriteLine($"Prediction for {model.symbol} : {(result.IsMatch ? "MATCH" : "NO MATCH")}, Probability: {result.Probability:P1}");
-
-#if false
-// graph the successful patterns
-            if (result.IsMatch)
-            {
-                patternModelList.Add(input);
-                dtList.Add(PatternCandles[1].dtDotNet);
-                outputList.Add(result);
-
-                ThreeBarSvgReporter.WriteSvgHtml($"c:\\work\\3bar_{model.symbol}.html", patternModelList, dtList, outputList);
-            }
-#endif
-
-            return new MLResult(model,result.IsMatch, result.Probability);
+            return new MLResult(model,result.IsMatch, result.Probability, noticeList);
         }
     }
 }

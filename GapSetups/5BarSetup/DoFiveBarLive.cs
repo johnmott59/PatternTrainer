@@ -13,6 +13,7 @@ namespace CandlePatternML
     {
         public MLResult DoFiveBarLive(MLEngineWrapper mlEngine,GetCandleModel model)
         {
+            List<string> noticeList = new List<string>();
             // get the last 6 days of candles. We need 5 bars for the pattern
             // and one day prior to see if there is a gap
 
