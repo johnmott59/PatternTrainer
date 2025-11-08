@@ -67,6 +67,11 @@ namespace CandlePatternML
             {
                 foreach (var row in oWorksheet.Rows)
                 {
+                    // catch null demark pivot models
+                    if (v.oDemarkPivotModel == null)
+                    {
+                        continue;
+                    }
                     if (row.GetValue("A").ToString() == v.Ticker)
                     {
                         // update the last close in column B

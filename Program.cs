@@ -58,7 +58,7 @@ namespace CandlePatternML
 
             SetupWorkSheetModel oSetupWorkSheetModel = new SetupWorkSheetModel();
 
-            foreach (var tdm in TickerDataModelList) //.Where(m=>m == "CRSP"))
+            foreach (var tdm in TickerDataModelList) // .Where(m=>m.Ticker == "QUBT"))
             {
                 string ticker = tdm.Ticker;
 
@@ -73,17 +73,11 @@ namespace CandlePatternML
                     continue;
                 }
 
+                if (model.candles.Length < 10) continue; // not enough data
+
                 DemarkPivotModel DemarkPivots = new DemarkPivotModel();
                 DemarkPivots.FindPivots(model.candles.ToList(), GetAuthKey());
-#if false
-                // find recent pivots
-                var xxx =  FindDemarkPivots(model.candles.ToList());
 
-                if (!xxx.Equals(DemarkPivots))
-                {
-                    Console.WriteLine("diferent values");
-                }
-#endif
                 // save the most recent close
                 tdm.LastClose = model.candles[^1].close;
                 // save all candle data so we can draw a chart

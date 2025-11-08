@@ -19,8 +19,11 @@ namespace PatternTrainer
                 "2Bar Match", 
                 "Note",
                 "3Bar Confidence",
+                 "Note",
                 "4Bar Confidence",
+                 "Note",
                 "5Bar Confidence",
+                 "Note",
                 "RSI4 Match"
             };
       

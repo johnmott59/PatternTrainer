@@ -67,21 +67,25 @@ namespace CandlePatternML
                 if (v.ml3BarResults.Success)
                 {
                     worksheet.SetValue(rowindex, "F", v.ml3BarResults.Confidence.ToString("F2"));
+                    worksheet.SetValue(rowindex, "G", v.ml3BarResults.Notice);
                 }
 
                 if (v.ml4BarResults.Success)
                 {
-                    worksheet.SetValue(rowindex, "G", v.ml4BarResults.Confidence.ToString("F2"));
+                    worksheet.SetValue(rowindex, "H", v.ml4BarResults.Confidence.ToString("F2"));
+                    worksheet.SetValue(rowindex, "I", v.ml4BarResults.Notice);
                 }
 
                 if (v.ml5BarResults.Success)
                 {
-                    worksheet.SetValue(rowindex, "H", v.ml5BarResults.Confidence.ToString("F2"));
+                    worksheet.SetValue(rowindex, "J", v.ml5BarResults.Confidence.ToString("F2"));
+                    worksheet.SetValue(rowindex, "K", v.ml5BarResults.Notice);
+
                 }
 
                 if (v.RSI4Results.Success)
                 {
-                    worksheet.SetValue(rowindex, "I", v.RSI4Results.Confidence.ToString("F2"));
+                    worksheet.SetValue(rowindex, "L", v.RSI4Results.Confidence.ToString("F2"));
                 }
                 rowindex++;
             }
