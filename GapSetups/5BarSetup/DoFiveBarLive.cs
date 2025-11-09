@@ -20,6 +20,19 @@ namespace CandlePatternML
             int length = model.candles.Length;
             List<Candle> PatternCandles = model.candles.Skip(length - 6).ToList();
 
+            Candle bar0 = PatternCandles[0]; // bar before the gap
+                                             // is the day before gap a red day?
+            if (bar0.close < bar0.open)
+            {
+                noticeList.Add("Pre Gap Red");
+            }
+            Candle bar1 = PatternCandles[1]; // gap day
+            bool GapDayGreen = bar1.close > bar1.open;
+            if (GapDayGreen == false)
+            {
+                noticeList.Add("Gap Day Red");
+            }
+
             // do we have a gap?
             if (PatternCandles[1].open <= PatternCandles[0].close) return new MLResult(model,false, 0);
             // did the close of today fill the gap?
@@ -55,13 +68,6 @@ namespace CandlePatternML
             if (b5 < b3 && b5 < b2) return new MLResult(model,  false, 0);
             if (b5 < b3 && b5 < b1) return new MLResult(model,  false, 0);
 
-#if false
-// use for graphing the patterns
-            List<ThreeBarPatternModel> patternModelList = new List<ThreeBarPatternModel>();
-            List<DateTime> dtList = new List<DateTime>();
-            List<CandlePatternOutput> outputList = new List<CandlePatternOutput>();
-#endif
-
          //   Console.WriteLine($"found gap at  {PatternCandles[1].dtDotNet.ToShortDateString()}");
             FiveBarPatternModel input = new FiveBarPatternModel
             {
@@ -87,21 +93,7 @@ namespace CandlePatternML
             // run the prediction
             var result = mlEngine.predictionEngine5Bar.Predict(input);
 
-          //  Console.WriteLine($"Prediction for {model.symbol} : {(result.IsMatch ? "MATCH" : "NO MATCH")}, Probability: {result.Probability:P1}");
-
-#if false
-// graph the successful patterns
-            if (result.IsMatch)
-            {
-                patternModelList.Add(input);
-                dtList.Add(PatternCandles[1].dtDotNet);
-                outputList.Add(result);
-
-                ThreeBarSvgReporter.WriteSvgHtml($"c:\\work\\3bar_{model.symbol}.html", patternModelList, dtList, outputList);
-            }
-#endif
-
-            return new MLResult(model,result.IsMatch, result.Probability);
+             return new MLResult(model,result.IsMatch, result.Probability, noticeList);
         }
     }
 }
