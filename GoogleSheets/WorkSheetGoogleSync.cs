@@ -207,6 +207,14 @@ namespace CandlePatternML
         /// </summary>
         private async Task<SheetsService> GetSheetsServiceAsync(CancellationToken cancellationToken)
         {
+            string _tokenStorePath = Path.Combine(
+     Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData),
+     "GoogleTokenStore"
+ );
+
+            Console.WriteLine($"TokenStorePath = '{_tokenStorePath}'");
+            Console.WriteLine($"Absolute = '{Path.GetFullPath(_tokenStorePath)}'");
+
             // Load OAuth client and authorize
             using var stream = new FileStream(_credentialsPath, FileMode.Open, FileAccess.Read);
             var credential = await GoogleWebAuthorizationBroker.AuthorizeAsync(
