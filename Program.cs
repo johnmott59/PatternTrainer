@@ -58,7 +58,7 @@ namespace CandlePatternML
 
             SetupWorkSheetModel oSetupWorkSheetModel = new SetupWorkSheetModel();
 
-            foreach (var tdm in TickerDataModelList) // .Where(m=>m.Ticker == "QUBT"))
+            foreach (var tdm in TickerDataModelList)//.Where(m=>m.Ticker == "NFLX"))
             {
                 string ticker = tdm.Ticker;
 
@@ -252,9 +252,10 @@ namespace CandlePatternML
         {
             Program p = new Program();
 
-            //p.DoTwoBarTraining();
-            // p.DoFourBarTraining();
-            //p.DoFiveBarTraining();
+            //   p.DoTwoBarTraining();
+          //  p.DoThreeBarTraining();
+         //   p.DoFourBarTraining();
+         //   p.DoFiveBarTraining();
 
             p.Run().Wait();
 
