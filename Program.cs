@@ -109,24 +109,24 @@ namespace CandlePatternML
 
                 // generate a png
 
-                MLResult result2 = DoTwoBarLive(mlEngine2bar, model);
-                resultlist2bar.Add(result2);
+                MLResult resultTwoBar = DoTwoBarLive(mlEngine2bar, model);
+                resultlist2bar.Add(resultTwoBar);
 
-                MLResult result3 = DoThreeBarLive(mlEngine3bar, model);
-                resultlist3bar.Add(result3);
+                MLResult resultThreeBar = DoThreeBarLive(mlEngine3bar, model);
+                resultlist3bar.Add(resultThreeBar);
 
-                MLResult result4 = DoFourBarLive(mlEngine4bar, model);
-                resultlist4bar.Add(result4);
+                MLResult resultFourBar = DoFourBarLive(mlEngine4bar, model);
+                resultlist4bar.Add(resultFourBar);
 
-                MLResult result5 = DoFiveBarLive(mlEngine5bar, model);
-                resultlist5bar.Add(result5);
+                MLResult resultFiveBar = DoFiveBarLive(mlEngine5bar, model);
+                resultlist5bar.Add(resultFiveBar);
 
                 // get the RSI4bar result
-                MLResult result6 = DoRSI4Live(model);
-                resultRSI4bar.Add(result6);
+                MLResult resultRSI4 = DoRSI4Live(model);
+                resultRSI4bar.Add(resultRSI4);
 
                 // add to results worksheet
-                oSetupWorkSheetModel.AddTicker(ticker,DemarkPivots,result2,result3,result4,result5,result6);
+                oSetupWorkSheetModel.AddTicker(ticker,DemarkPivots,resultTwoBar,resultThreeBar,resultFourBar,resultFiveBar,resultRSI4);
 
             }
 

@@ -26,7 +26,7 @@ namespace CandlePatternML
 
             if ((double)model.candles[^1].close > sma200[^1] && rsi4[^1] <= 25)
             {
-                return new MLResult(model, true, 1);
+                return new MLResult(model, true, (float) rsi4[^1].Value);
             }
 
             return new MLResult(model, false, 0);
