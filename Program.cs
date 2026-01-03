@@ -107,7 +107,7 @@ namespace CandlePatternML
                 DemarkPivots.ForecastedPivotLowTrendBreak = tdm.ForecastedPivotLowTrendBreak;
 #endif
 
-                // generate a png
+                // get the results of the different tests
 
                 MLResult resultTwoBar = DoTwoBarLive(mlEngine2bar, model);
                 resultlist2bar.Add(resultTwoBar);
@@ -124,6 +124,9 @@ namespace CandlePatternML
                 // get the RSI4bar result
                 MLResult resultRSI4 = DoRSI4Live(model);
                 resultRSI4bar.Add(resultRSI4);
+
+                // Save these to models to the database
+                SaveModelsToDatabase(ticker, DemarkPivots, resultTwoBar, resultThreeBar, resultFourBar, resultFiveBar, resultRSI4);
 
                 // add to results worksheet
                 oSetupWorkSheetModel.AddTicker(ticker,DemarkPivots,resultTwoBar,resultThreeBar,resultFourBar,resultFiveBar,resultRSI4);
@@ -248,6 +251,71 @@ namespace CandlePatternML
            // WriteWorkSheet(resultlist3bar);
             // write this to the google sheet
         }
+
+        /// <summary>
+        /// Saves the ML results and trend break data to the database
+        /// </summary>
+        /// <param name="ticker">The ticker symbol</param>
+        /// <param name="demarkPivots">The DeMark pivot analysis results</param>
+        /// <param name="resultTwoBar">Two bar pattern ML result</param>
+        /// <param name="resultThreeBar">Three bar pattern ML result</param>
+        /// <param name="resultFourBar">Four bar pattern ML result</param>
+        /// <param name="resultFiveBar">Five bar pattern ML result</param>
+        /// <param name="resultRSI4">RSI4 pattern ML result</param>
+        private void SaveModelsToDatabase(string ticker, DemarkPivotModel demarkPivots, 
+            MLResult resultTwoBar, MLResult resultThreeBar, MLResult resultFourBar, 
+            MLResult resultFiveBar, MLResult resultRSI4)
+        {
+            // Create and save the SetupInstancesModel first
+            var setupInstance = new SetupInstancesModel(ticker, DateTime.Now);
+            setupInstance.Save();
+
+            if (resultRSI4.Success)
+            {
+                var rsi4Model = new RSI4LongModel(setupInstance, (decimal)resultRSI4.Confidence);
+                rsi4Model.Save();
+            }
+
+            // Save TwoBarModel if successful
+            if (resultTwoBar.Success)
+            {
+                var twoBarModel = new TwoBarModel(setupInstance, (decimal)resultTwoBar.Confidence, resultTwoBar.Notice ?? "");
+                twoBarModel.Save();
+            }
+
+            // Save ThreeBarModel if successful
+            if (resultThreeBar.Success)
+            {
+                var threeBarModel = new ThreeBarModel(setupInstance, (decimal)resultThreeBar.Confidence, resultThreeBar.Notice ?? "");
+                threeBarModel.Save();
+            }
+
+            // Save FourBarModel if successful
+            if (resultFourBar.Success)
+            {
+                var fourBarModel = new FourBarModel(setupInstance, (decimal)resultFourBar.Confidence, resultFourBar.Notice ?? "");
+                fourBarModel.Save();
+            }
+
+            // Save FiveBarModel if successful
+            if (resultFiveBar.Success)
+            {
+                var fiveBarModel = new FiveBarModel(setupInstance, (decimal)resultFiveBar.Confidence, resultFiveBar.Notice ?? "");
+                fiveBarModel.Save();
+            }
+
+            // Save TrendBreaksModel if there's a trend break date or forecasted value
+            if (demarkPivots.PivotHighTrendBreakDate.HasValue || demarkPivots.ForecastedPivotHighTrendBreak.HasValue)
+            {
+                // Use trend break date if available, otherwise use current date for forecasted breaks
+                var trendBreakDate = demarkPivots.PivotHighTrendBreakDate ?? DateTime.Now;
+                // Use forecasted value if available, otherwise use 0
+                var projectedValue = demarkPivots.ForecastedPivotHighTrendBreak ?? 0m;
+                var trendBreaksModel = new TrendBreaksModel(setupInstance, trendBreakDate, projectedValue);
+                trendBreaksModel.Save();
+            }
+        }
+
         static void Main(string[] args)
         {
             Program p = new Program();
