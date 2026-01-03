@@ -1,4 +1,6 @@
 using System;
+using System.Data.SqlClient;
+using System.Configuration;
 
 namespace CandlePatternML
 {
@@ -23,6 +25,29 @@ namespace CandlePatternML
             SetupInstanceID = setupInstance.ID;
             TrendBreakDate = trendBreakDate;
             ProjectedBreakValue = projectedBreakValue;
+        }
+
+        /// <summary>
+        /// Saves this TrendBreaksModel to the TrendBreaks table in the database
+        /// </summary>
+        public void Save()
+        {
+            using (SqlConnection connection = new SqlConnection(ConfigurationManager.ConnectionStrings["StockSetup"].ConnectionString))
+            {
+                connection.Open();
+                string insertQuery = @"INSERT INTO [TrendBreaks] ([SetupInstanceID], [TrendBreakDate], [ProjectedBreakValue])
+                                      OUTPUT INSERTED.ID
+                                      VALUES (@SetupInstanceID, @TrendBreakDate, @ProjectedBreakValue)";
+                
+                using (SqlCommand command = new SqlCommand(insertQuery, connection))
+                {
+                    command.Parameters.AddWithValue("@SetupInstanceID", SetupInstanceID);
+                    command.Parameters.AddWithValue("@TrendBreakDate", TrendBreakDate);
+                    command.Parameters.AddWithValue("@ProjectedBreakValue", ProjectedBreakValue);
+                    
+                    ID = (int)command.ExecuteScalar();
+                }
+            }
         }
     }
 }

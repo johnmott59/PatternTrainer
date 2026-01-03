@@ -1,4 +1,6 @@
 using System;
+using System.Data.SqlClient;
+using System.Configuration;
 
 namespace CandlePatternML
 {
@@ -23,6 +25,29 @@ namespace CandlePatternML
             SetupInstanceID = setupInstance.ID;
             Confidence = confidence;
             Note = note;
+        }
+
+        /// <summary>
+        /// Saves this TwoBarModel to the TwoBar table in the database
+        /// </summary>
+        public void Save()
+        {
+            using (SqlConnection connection = new SqlConnection(ConfigurationManager.ConnectionStrings["StockSetup"].ConnectionString))
+            {
+                connection.Open();
+                string insertQuery = @"INSERT INTO [TwoBar] ([SetupInstanceID], [Confidence], [Note])
+                                      OUTPUT INSERTED.ID
+                                      VALUES (@SetupInstanceID, @Confidence, @Note)";
+                
+                using (SqlCommand command = new SqlCommand(insertQuery, connection))
+                {
+                    command.Parameters.AddWithValue("@SetupInstanceID", SetupInstanceID);
+                    command.Parameters.AddWithValue("@Confidence", Confidence);
+                    command.Parameters.AddWithValue("@Note", Note ?? (object)DBNull.Value);
+                    
+                    ID = (int)command.ExecuteScalar();
+                }
+            }
         }
     }
 }
