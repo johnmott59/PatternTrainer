@@ -1,4 +1,8 @@
-﻿using Microsoft.ML;
+﻿using Google.Apis.Auth.OAuth2;
+using Google.Apis.Services;
+using Google.Apis.Sheets.v4;
+using Google.Apis.Util.Store;
+using Microsoft.ML;
 using Microsoft.ML.Data;
 using Microsoft.ML.Trainers.FastTree;
 using SchwabLib;
@@ -19,31 +23,25 @@ namespace CandlePatternML
             _tokenStorePath = tokenStorePath;
             _applicationName = applicationName;
 
+            UserCredential credential;
 
-#if false
-// this isn't working, its an attempt to develop stuff to read formualas. the json wasn't correct somehow
-            GoogleCredential credential;
-            try
+            using (var stream = new FileStream(credentialsPath, FileMode.Open, FileAccess.Read))
             {
-                using (var stream = new FileStream(credentialsPath, FileMode.Open, FileAccess.Read))
-                {
-                    credential = GoogleCredential
-                        .FromStream(stream)
-                        .CreateScoped(SheetsService.Scope.Spreadsheets);
-                }
-
-                _service = new SheetsService(new BaseClientService.Initializer
-                {
-                    HttpClientInitializer = credential,
-                    ApplicationName = "PatternTrainer"
-                });
-
-            } catch(Exception ex)
-            {
-                Console.WriteLine(ex.Message);
+                credential = GoogleWebAuthorizationBroker.AuthorizeAsync(
+                    GoogleClientSecrets.FromStream(stream).Secrets,
+                    new[] { SheetsService.Scope.Spreadsheets },
+                    "user",
+                    CancellationToken.None,
+                    new FileDataStore("PatternTrainer.Tokens", true)
+                ).Result;
             }
 
-#endif
+            _service = new SheetsService(new BaseClientService.Initializer
+            {
+                HttpClientInitializer = credential,
+                ApplicationName = "PatternTrainer"
+            });
+
         }
 
     }

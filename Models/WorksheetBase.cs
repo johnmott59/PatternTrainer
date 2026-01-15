@@ -38,7 +38,11 @@ namespace CandlePatternML
             {
                 // Example 1: Read entire sheet
                 Console.WriteLine("=== Reading entire sheet ===");
-                var entireSheet = await googleSync.ReadAsync(sheetName);
+                //var entireSheet = await googleSync.ReadAsync(sheetName);
+                
+                // read values and formulas
+                var entireSheet = await googleSync.ReadFormulasAsync(sheetName);
+
                 if (entireSheet != null)
                 {
                     Console.WriteLine($"Read sheet '{entireSheet.SheetName}' with {entireSheet.RowCount} rows and {entireSheet.ColumnCount} columns");

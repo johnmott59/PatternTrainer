@@ -39,7 +39,7 @@ namespace CandlePatternML
             {
                 var newrow = new TickerListRowDataModel();
                 newrow.Ticker = v.GetValue(0).ToString();
-                for (int i=12; i < 30; i++)
+                for (int i=11; i < 30; i++)
                 {
                     var o = v.GetValue(i);
                     if (o != null)

@@ -26,9 +26,12 @@ namespace CandlePatternML
 
             var response = await request.ExecuteAsync();
 
-            // return ConvertToWorkSheet(response, sheetName);
+            // Convert the Google Sheets data to WorkSheet model
+            var worksheet = ConvertFromGoogleSheetsFormat(response.Values, sheetName, true);
 
-            return new WorkSheet(sheetName);
+            Console.WriteLine($"Successfully read {worksheet.RowCount} rows and {worksheet.ColumnCount} columns from sheet '{sheetName}'");
+            return worksheet;
+
         }
     }
 }
