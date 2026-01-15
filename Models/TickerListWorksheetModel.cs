@@ -18,6 +18,7 @@ namespace CandlePatternML
         public decimal LastClose { get; set; }
         public GetCandleModel oCandleModel { get; set; }
         public DemarkPivotModel oDemarkPivotModel { get; set; }
+        public List<string> ColumnData = new List<string>();        // for rest of colums
 
     }
     /// <summary>
@@ -36,7 +37,22 @@ namespace CandlePatternML
             // read the list of tickers and create ticker data models. so far they only contain the ticker symbol
             foreach (var v in oWorksheet.Rows)
             {
-                RowDataList.Add(new TickerListRowDataModel() { Ticker = v.GetValue(0).ToString() });
+                var newrow = new TickerListRowDataModel();
+                newrow.Ticker = v.GetValue(0).ToString();
+                for (int i=12; i < 30; i++)
+                {
+                    var o = v.GetValue(i);
+                    if (o != null)
+                    {
+                        newrow.ColumnData.Add(o.ToString());
+                    }
+                    else
+                    {
+                        newrow.ColumnData.Add("");
+                    }
+                }
+
+                RowDataList.Add(newrow);
             }
         }
 
@@ -114,6 +130,9 @@ namespace CandlePatternML
                                 row.SetValue("H", $"({v.oDemarkPivotModel.PivotLowTrendBreakDate?.ToString("MM/dd/yyyy")})");
                             }
                         }
+
+                        string formula = $"=INDEX(GOOGLEFINANCE(\"{v.Ticker}\",\"close\",TODAY()-28,TODAY()-28,\"DAILY\"),2,2)";
+                        row.SetValue("L", formula);
                     }
                 }
             }

@@ -6,177 +6,27 @@ using Google.Apis.Util.Store;
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq; // Added for FirstOrDefault
 using System.Threading;
 using System.Threading.Tasks;
-using System.Linq; // Added for FirstOrDefault
 
 namespace CandlePatternML
 {
     /// <summary>
     /// Provides synchronization functionality to save WorkSheet data to Google Sheets
     /// </summary>
-    public class WorkSheetGoogleSync
+    public partial class WorkSheetGoogleSync
     {
-        private readonly string _spreadsheetId;
-        private readonly string _credentialsPath;
-        private readonly string _tokenStorePath;
-        private readonly string _applicationName;
-        private static readonly string[] Scopes = { SheetsService.Scope.Spreadsheets };
 
-        public WorkSheetGoogleSync(string spreadsheetId, string credentialsPath, string tokenStorePath = "token-store", string applicationName = "PatternTrainer")
-        {
-            _spreadsheetId = spreadsheetId;
-            _credentialsPath = credentialsPath;
-            _tokenStorePath = tokenStorePath;
-            _applicationName = applicationName;
-        }
 
-        /// <summary>
-        /// Synchronizes the entire worksheet to Google Sheets
-        /// </summary>
-        public async Task<bool> SynchronizeAsync(WorkSheet worksheet, CancellationToken cancellationToken = default)
-        {
-            try
-            {
-                var service = await GetSheetsServiceAsync(cancellationToken);
-                
-                // Ensure the sheet exists before trying to write to it
-                bool sheetExists = await EnsureSheetExistsAsync(worksheet.SheetName, cancellationToken);
-                if (!sheetExists)
-                {
-                    Console.WriteLine($"Error: Could not create or verify sheet '{worksheet.SheetName}'");
-                    return false;
-                }
-                
-                // Get the data as a 2D array
-                var dataArray = worksheet.GetDataArray();
-                
-                if (dataArray.Length == 0)
-                {
-                    Console.WriteLine("No data to synchronize");
-                    return true;
-                }
 
-                // Convert to Google Sheets format
-                var values = ConvertToGoogleSheetsFormat(dataArray);
-                
-                // Clear existing content first (optional - you can remove this if you want to append)
-                await ClearSheetAsync(service, worksheet.SheetName, cancellationToken);
-                
-                // Write the data
-                var range = $"{worksheet.SheetName}!A1";
-                var valueRange = new ValueRange
-                {
-                    Values = values
-                };
+    
+     
 
-                var updateRequest = service.Spreadsheets.Values.Update(valueRange, _spreadsheetId, range);
-                updateRequest.ValueInputOption = SpreadsheetsResource.ValuesResource.UpdateRequest.ValueInputOptionEnum.USERENTERED;
-                
-                var result = await updateRequest.ExecuteAsync(cancellationToken);
-                
-                Console.WriteLine($"Successfully synchronized worksheet '{worksheet.SheetName}' to Google Sheets");
-                Console.WriteLine($"Updated range: {result.UpdatedRange}");
-                Console.WriteLine($"Updated rows: {result.UpdatedRows}");
-                Console.WriteLine($"Updated columns: {result.UpdatedColumns}");
-                
-                return true;
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"Error synchronizing worksheet: {ex.Message}");
-                return false;
-            }
-        }
+ 
 
-        /// <summary>
-        /// Synchronizes the entire worksheet to Google Sheets (synchronous version)
-        /// </summary>
-        public bool Synchronize(WorkSheet worksheet)
-        {
-            return SynchronizeAsync(worksheet).GetAwaiter().GetResult();
-        }
 
-        /// <summary>
-        /// Appends data to the end of an existing sheet
-        /// </summary>
-        public async Task<bool> AppendAsync(WorkSheet worksheet, CancellationToken cancellationToken = default)
-        {
-            try
-            {
-                var service = await GetSheetsServiceAsync(cancellationToken);
-                
-                // Ensure the sheet exists before trying to append to it
-                bool sheetExists = await EnsureSheetExistsAsync(worksheet.SheetName, cancellationToken);
-                if (!sheetExists)
-                {
-                    Console.WriteLine($"Error: Could not create or verify sheet '{worksheet.SheetName}'");
-                    return false;
-                }
-                
-                // Get the data as a 2D array
-                var dataArray = worksheet.GetDataArray();
-                
-                if (dataArray.Length == 0)
-                {
-                    Console.WriteLine("No data to append");
-                    return true;
-                }
-
-                // Convert to Google Sheets format
-                var values = ConvertToGoogleSheetsFormat(dataArray);
-                
-                // Append the data
-                var range = $"{worksheet.SheetName}!A1";
-                var valueRange = new ValueRange
-                {
-                    Values = values
-                };
-
-                var appendRequest = service.Spreadsheets.Values.Append(valueRange, _spreadsheetId, range);
-                appendRequest.ValueInputOption = SpreadsheetsResource.ValuesResource.AppendRequest.ValueInputOptionEnum.USERENTERED;
-                
-                var result = await appendRequest.ExecuteAsync(cancellationToken);
-                
-                Console.WriteLine($"Successfully appended worksheet '{worksheet.SheetName}' to Google Sheets");
-                Console.WriteLine($"Appended to range: {result.TableRange}");
-                
-                return true;
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"Error appending worksheet: {ex.Message}");
-                return false;
-            }
-        }
-
-        /// <summary>
-        /// Appends data to the end of an existing sheet (synchronous version)
-        /// </summary>
-        public bool Append(WorkSheet worksheet)
-        {
-            return AppendAsync(worksheet).GetAwaiter().GetResult();
-        }
-
-        /// <summary>
-        /// Clears the entire sheet content
-        /// </summary>
-        private async Task ClearSheetAsync(SheetsService service, string sheetName, CancellationToken cancellationToken)
-        {
-            try
-            {
-                // Only try to clear if the sheet exists and has content
-                var clearRequest = service.Spreadsheets.Values.Clear(new ClearValuesRequest(), _spreadsheetId, $"{sheetName}!A:Z");
-                await clearRequest.ExecuteAsync(cancellationToken);
-                Console.WriteLine($"Cleared existing content from sheet '{sheetName}'");
-            }
-            catch (Exception ex)
-            {
-                // If clearing fails (e.g., sheet doesn't exist or is empty), that's okay
-                // We'll just proceed with writing the new data
-                Console.WriteLine($"Note: Sheet '{sheetName}' appears to be empty or new (no content to clear)");
-            }
-        }
+    
 
         /// <summary>
         /// Converts the 2D data array to Google Sheets format
@@ -330,6 +180,25 @@ namespace CandlePatternML
                 return null;
             }
         }
+
+        public async Task<WorkSheet> ReadFormulasAsync(string sheetName)
+        {
+            var request = _service.Spreadsheets.Values.Get(
+                _spreadsheetId,
+                sheetName
+            );
+
+            request.ValueRenderOption =
+                SpreadsheetsResource.ValuesResource.GetRequest
+                    .ValueRenderOptionEnum.FORMULA;
+
+            var response = await request.ExecuteAsync();
+
+            // return ConvertToWorkSheet(response, sheetName);
+
+            return new WorkSheet(sheetName);
+        }
+
 
         /// <summary>
         /// Reads data from a Google Sheet and returns it as a WorkSheet model (synchronous version)
