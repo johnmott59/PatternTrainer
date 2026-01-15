@@ -23,12 +23,12 @@ namespace CandlePatternML
         /// <param name="resultFourBar">Four bar pattern ML result</param>
         /// <param name="resultFiveBar">Five bar pattern ML result</param>
         /// <param name="resultRSI4">RSI4 pattern ML result</param>
-        private void SaveModelsToDatabase(string ticker, DemarkPivotModel demarkPivots,
+        private void SaveModelsToDatabase(string ticker,DateTime StartDate, DemarkPivotModel demarkPivots,
             MLResult resultTwoBar, MLResult resultThreeBar, MLResult resultFourBar,
             MLResult resultFiveBar, MLResult resultRSI4)
         {
             // Create and save the SetupInstancesModel first
-            var setupInstance = new SetupInstancesModel(ticker, DateTime.Now);
+            var setupInstance = new SetupInstancesModel(ticker, StartDate);
             setupInstance.Save();
 
             if (resultRSI4.Success)

@@ -6,6 +6,7 @@ using SchwabLib;
 using SchwabLib.Models;
 using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Reflection;
 using System.Reflection.Metadata;
 using System.Threading.Tasks;
@@ -13,11 +14,8 @@ using System.Threading.Tasks;
 
 namespace CandlePatternML
 {
-    public partial class Program
+       public partial class Program
     {
-        APIWrapper oAPIWrapper = new APIWrapper();
-#if false
-      
         public async Task Run()
         {
             string authKey = GetAuthKey();
@@ -106,7 +104,7 @@ namespace CandlePatternML
                 resultRSI4bar.Add(resultRSI4);
 
                 // Save these to models to the database
-                SaveModelsToDatabase(ticker, DateTime.Now, DemarkPivots, resultTwoBar, resultThreeBar, resultFourBar, resultFiveBar, resultRSI4);
+                SaveModelsToDatabase(ticker,DateTime.Now, DemarkPivots, resultTwoBar, resultThreeBar, resultFourBar, resultFiveBar, resultRSI4);
 
                 // add to results worksheet
                 oSetupWorkSheetModel.AddTicker(ticker,DemarkPivots,resultTwoBar,resultThreeBar,resultFourBar,resultFiveBar,resultRSI4);
@@ -240,7 +238,4 @@ namespace CandlePatternML
  
 
    
-}
-#endif
-    }
 }
