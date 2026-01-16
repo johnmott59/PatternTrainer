@@ -5,6 +5,7 @@ using SchwabLib;
 using SchwabLib.Models;
 using System;
 using System.Collections.Generic;
+using System.Text;
 
 
 namespace CandlePatternML
@@ -93,6 +94,8 @@ namespace CandlePatternML
                         // update the last close in column B
                         row.SetValue("B", v.LastClose);
 
+                     
+
                         // we want the most recent pivot to be lower than the one previous
 
                         row.SetValue("C", "");
@@ -131,8 +134,16 @@ namespace CandlePatternML
                             }
                         }
 
-                        string formula = $"=INDEX(GOOGLEFINANCE(\"{v.Ticker}\",\"close\",TODAY()-28,TODAY()-28,\"DAILY\"),2,2)";
-                        row.SetValue("L", formula);
+#if false
+                        for (int i=12; i <= 20; i++)
+                        {
+                            string val = v.ColumnData[i - 12];
+                            row.SetValue(i, val);
+                        }
+#endif
+
+                      //  string formula = $"=INDEX(GOOGLEFINANCE(\"{v.Ticker}\",\"close\",TODAY()-28,TODAY()-28,\"DAILY\"),2,2)";
+                      //  row.SetValue("L", formula);
                     }
                 }
             }
