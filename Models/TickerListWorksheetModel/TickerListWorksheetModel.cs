@@ -10,18 +10,7 @@ using System.Text;
 
 namespace CandlePatternML
 {
-    /// <summary>
-    /// here is the model for each row
-    /// </summary>
-    public partial class TickerListRowDataModel
-    {
-        public string Ticker { get; set; }
-        public decimal LastClose { get; set; }
-        public GetCandleModel oCandleModel { get; set; }
-        public DemarkPivotModel oDemarkPivotModel { get; set; }
-        public List<string> ColumnData = new List<string>();        // for rest of colums
 
-    }
     /// <summary>
     /// this is a model for the worksheet that contains a list of tickers and associated data
     /// </summary>
