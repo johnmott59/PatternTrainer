@@ -69,7 +69,7 @@ namespace CandlePatternML
                     continue;
                 }
 
-                if (model.candles.Length < 10) continue; // not enough data
+                if (model.candles.Length < 15) continue; // not enough data
 
                 DemarkPivotModel DemarkPivots = new DemarkPivotModel();
                 DemarkPivots.FindPivots(model.candles.ToList(), GetAuthKey());
@@ -120,6 +120,7 @@ namespace CandlePatternML
 
             /*
              * Write out the ticker worksheet with the pivot data
+             * this goes to the sheet called 'Tickers' and contains all the tickers processed
              */
 
             oTickerListWorksheetModel.UpdateTickerWorksheet();

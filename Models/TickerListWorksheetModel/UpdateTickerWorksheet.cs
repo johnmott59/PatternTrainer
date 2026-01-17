@@ -5,6 +5,8 @@ using SchwabLib;
 using SchwabLib.Models;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
+using System.Numerics;
 using System.Text;
 
 
@@ -26,6 +28,44 @@ namespace CandlePatternML
 
             foreach (var v in RowDataList)
             {
+    
+
+                if (v.oCandleModel == null) continue;
+                if (v.oCandleModel.candles == null) continue;
+                if (v.oCandleModel.candles.Count() < 15) continue;
+
+                /*
+                 * Get the volume ratio for the last 13 days
+                 */
+                double volumeRatio = 0.0;
+                BigInteger avgVolume = 0;
+                BigInteger mostrecentvolume = 0;
+                // get the volume from the last 13 days. inver the list, skip the most recent and take 13
+                var last13 = v.oCandleModel.candles.Reverse().Skip(1).Take(13).ToList();
+
+                try
+                {
+                    if (last13.Count == 13)
+                    {
+                        BigInteger totalvolume = 0;
+                        for (int i = 0; i < last13.Count; i++)
+                        {
+                            totalvolume += last13[i].volume;
+                        }
+                        avgVolume = totalvolume / last13.Count;
+                        // get the most recent volume and compare it to the average of the last 13 days
+                        mostrecentvolume = v.oCandleModel.candles[^1].volume;
+
+                        volumeRatio = (double)mostrecentvolume / (double)avgVolume;
+                    }
+                } catch(Exception ex)
+                {
+                    Console.WriteLine($"Error calculating volume ratio for {v.Ticker}: {ex.Message}");
+                }
+              
+          
+               
+
                 foreach (var row in oWorksheet.Rows)
                 {
                     // catch null demark pivot models
@@ -76,6 +116,8 @@ namespace CandlePatternML
                             }
                         }
 
+                        // volume ratio in column I
+                        row.SetValue("K", volumeRatio.ToString("F2"));
 #if false
                         for (int i=12; i <= 20; i++)
                         {
