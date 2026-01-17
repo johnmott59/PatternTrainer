@@ -14,54 +14,9 @@ namespace CandlePatternML
     /// <summary>
     /// this is a model for the worksheet that contains a list of tickers and associated data
     /// </summary>
-    public partial class TickerListWorksheetModel : WorksheetBase
+    public partial class TickerListWorksheetModel 
     {
-        public WorkSheet oWorksheet { get; set; }
-        public List<TickerListRowDataModel> RowDataList = new List<TickerListRowDataModel>();
-
-        // constructor, load the list of tickers worksheet.
-        public TickerListWorksheetModel()
-        {
-            this.oWorksheet = ReadWorkSheet("Tickers").Result;
-
-            // read the list of tickers and create ticker data models. so far they only contain the ticker symbol
-            foreach (var v in oWorksheet.Rows)
-            {
-                var newrow = new TickerListRowDataModel();
-                newrow.Ticker = v.GetValue(0).ToString();
-                for (int i=11; i < 30; i++)
-                {
-                    var o = v.GetValue(i);
-                    if (o != null)
-                    {
-                        newrow.ColumnData.Add(o.ToString());
-                    }
-                    else
-                    {
-                        newrow.ColumnData.Add("");
-                    }
-                }
-
-                RowDataList.Add(newrow);
-            }
-        }
-
-        public void SaveChanges()
-        {
-            UpdateWorkSheet(oWorksheet);
-        }
-
-        // constructor, load the list of tickers worksheet.
-        public TickerListWorksheetModel(WorkSheet oWorksheet)
-        {
-            this.oWorksheet = oWorksheet;
-
-            // read the list of tickers and create ticker data models. so far they only contain the ticker symbol
-            foreach (var v in oWorksheet.Rows)
-            {
-                RowDataList.Add(new TickerListRowDataModel() { Ticker = v.GetValue(0).ToString() });
-            }
-        }
+  
         /// <summary>
         /// transfer the data from the model to the worksheet and update google sheets
         /// </summary>

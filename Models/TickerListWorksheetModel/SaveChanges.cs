@@ -13,5 +13,9 @@ namespace CandlePatternML
     public partial class TickerListWorksheetModel
     {
 
+        public void SaveChanges()
+        {
+            UpdateWorkSheet(oWorksheet);
+        }
     }
 }

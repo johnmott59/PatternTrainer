@@ -10,16 +10,9 @@ using System.Collections.Generic;
 namespace CandlePatternML
 {
 
-    /// <summary>
-    /// here is the model for each row
-    /// </summary>
-    public partial class TickerListRowDataModel
+    public partial class TickerListWorksheetModel
     {
-        public string Ticker { get; set; }
-        public decimal LastClose { get; set; }
-        public GetCandleModel oCandleModel { get; set; }
-        public DemarkPivotModel oDemarkPivotModel { get; set; }
-        public List<string> ColumnData = new List<string>();        // for rest of colums
-
+        public WorkSheet oWorksheet { get; set; }
+        public List<TickerListRowDataModel> RowDataList = new List<TickerListRowDataModel>();
     }
 }
