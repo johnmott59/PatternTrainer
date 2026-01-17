@@ -38,8 +38,6 @@ namespace CandlePatternML
                         // update the last close in column B
                         row.SetValue("B", v.LastClose);
 
-                     
-
                         // we want the most recent pivot to be lower than the one previous
 
                         row.SetValue("C", "");
@@ -85,9 +83,9 @@ namespace CandlePatternML
                             row.SetValue(i, val);
                         }
 #endif
-
-                      //  string formula = $"=INDEX(GOOGLEFINANCE(\"{v.Ticker}\",\"close\",TODAY()-28,TODAY()-28,\"DAILY\"),2,2)";
-                      //  row.SetValue("L", formula);
+                        // this is how you would set a formula in google sheets
+                        //  string formula = $"=INDEX(GOOGLEFINANCE(\"{v.Ticker}\",\"close\",TODAY()-28,TODAY()-28,\"DAILY\"),2,2)";
+                        //  row.SetValue("L", formula);
                     }
                 }
             }

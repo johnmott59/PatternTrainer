@@ -25,13 +25,11 @@ namespace CandlePatternML
             //  FindDemarkPivots(emodel.candles.ToList());
 
         /*
-         * Read the worksheet containing the tickers
+         * Read the worksheet containing the tickers. this contains a list of models to handle each ticker 
+         * and allow it to be filled in with model data
          */
-        var tickerWorksheet = await ReadWorkSheet("Tickers");
 
         TickerListWorksheetModel oTickerListWorksheetModel = new TickerListWorksheetModel();
-
-        List<TickerListRowDataModel> TickerDataModelList = oTickerListWorksheetModel.RowDataList; //  new List<TickerListRowDataModel>();
 
         // delete all the files in the charts directory
 
@@ -56,7 +54,7 @@ namespace CandlePatternML
 
             SetupWorkSheetModel oSetupWorkSheetModel = new SetupWorkSheetModel();
 
-            foreach (var tdm in TickerDataModelList)//.Where(m=>m.Ticker == "NFLX"))
+            foreach (var tdm in oTickerListWorksheetModel.RowDataList)//.Where(m=>m.Ticker == "NFLX"))
             {
                 string ticker = tdm.Ticker;
 
@@ -115,7 +113,7 @@ namespace CandlePatternML
              * Generate PNG files for the matching patterns
              */
 
-            GeneratePNG(resultlist2bar, resultlist3bar, resultlist4bar, resultlist5bar,resultRSI4bar , TickerDataModelList, tickersinplay);
+            GeneratePNG(resultlist2bar, resultlist3bar, resultlist4bar, resultlist5bar,resultRSI4bar , oTickerListWorksheetModel.RowDataList, tickersinplay);
 
             // write the tickers to  a text file to load into TOS
             System.IO.File.WriteAllLines("c:\\work\\tickersinplay.txt", tickersinplay);
@@ -127,7 +125,8 @@ namespace CandlePatternML
             oTickerListWorksheetModel.UpdateTickerWorksheet();
 
             /*
-             * write out the worksheet with the ML results
+             * write out the worksheet with the ML results. this goes to the sheet called 'sheet1' and this sheet only has setups
+             * that have triggered a buy signal
              */
 
             WriteSetupsToWorksheet(oSetupWorkSheetModel);
