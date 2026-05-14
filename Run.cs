@@ -7,6 +7,7 @@ using SchwabLib.Models;
 using System;
 using System.Collections.Generic;
 using System.Data;
+using System.Linq;
 using System.Reflection;
 using System.Reflection.Metadata;
 using System.Threading.Tasks;
@@ -100,6 +101,9 @@ namespace CandlePatternML
                 // get the RSI4bar result
                 MLResult resultRSI4 = DoRSI4Live(model);
                 resultRSI4bar.Add(resultRSI4);
+
+                List<Studies.VolumeProfileResult> volProfilesLastDays = ComputeVolumeProfilesLastFiveDays(ticker);
+                Console.WriteLine($"  volume profiles (last completed sessions): {volProfilesLastDays.Count}");
 
                 // Save these to models to the database
                 SaveModelsToDatabase(ticker,DateTime.Now, DemarkPivots, resultTwoBar, resultThreeBar, resultFourBar, resultFiveBar, resultRSI4);
