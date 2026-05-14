@@ -102,6 +102,11 @@ namespace CandlePatternML
                 MLResult resultRSI4 = DoRSI4Live(model);
                 resultRSI4bar.Add(resultRSI4);
 
+                // get the volume profiles for the last 5 days. this isn't perfect, its missing the last day
+                // but the other values seem good. What we'll do is to record the number of consecutive up or down
+                // days, like +1, +2, +3, or -1, -2, -3. this will help screen tickers that are recently moving.
+
+
                 List<Studies.VolumeProfileResult> volProfilesLastDays = ComputeVolumeProfilesLastFiveDays(ticker);
                 Console.WriteLine($"  volume profiles (last completed sessions): {volProfilesLastDays.Count}");
 
