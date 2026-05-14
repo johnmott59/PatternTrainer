@@ -54,7 +54,7 @@ namespace CandlePatternML
 
             SetupWorkSheetModel oSetupWorkSheetModel = new SetupWorkSheetModel();
 
-            foreach (var tdm in oTickerListWorksheetModel.RowDataList)//.Where(m=>m.Ticker == "NFLX"))
+            foreach (var tdm in oTickerListWorksheetModel.RowDataList) //.Where(m=>m.Ticker == "NVRI"))
             {
                 string ticker = tdm.Ticker;
 

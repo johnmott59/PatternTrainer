@@ -29,7 +29,7 @@ namespace CandlePatternML
 
             p.Run().Wait();
 
-           // p.GetDividend();
+        // p.GetDividend();
 
 
         }
@@ -71,9 +71,12 @@ namespace CandlePatternML
 "PFFA",
 "PTY",
 "STWD",
+"RQI",
+"STWD",
 "SVOL",
 "THQ",
-
+"QQQI",
+"WDI"
         };
         public void GetDividend()
         {
@@ -107,10 +110,12 @@ namespace CandlePatternML
       
             }
 
+            StreamWriter sw = new StreamWriter("c:\\work\\dividends.txt");
             foreach (var r in results.OrderByDescending(r => r.Item2))
             {
-                Console.WriteLine($"{r.Item1}: {r.Item2:F2}%");
+                sw.WriteLine($"{r.Item1}: {r.Item2:F2}%");
             }
+            sw.Close();
 
 
         }
