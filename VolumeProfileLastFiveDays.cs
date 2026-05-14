@@ -25,9 +25,9 @@ namespace CandlePatternML
             GetCandleModel minuteModel = oAPIWrapper.GetCandles(
                 authKey,
                 ticker,
-                DateTime.Today.AddDays(-400),
+                DateTime.Today.AddDays(-6),
                 DateTime.Today,
-                APIWrapper.eCandleTime.Daily);
+                APIWrapper.eCandleTime.OneMinute);
 
             List<Candle> candles = minuteModel.candles.ToList();
             if (candles.Count == 0)
