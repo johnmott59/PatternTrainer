@@ -26,7 +26,7 @@ namespace CandlePatternML
                 authKey,
                 ticker,
                 DateTime.Today.AddDays(-6),
-                DateTime.Today,
+                DateTime.Today.AddDays(1),
                 APIWrapper.eCandleTime.OneMinute);
 
             List<Candle> candles = minuteModel.candles.ToList();
@@ -43,7 +43,7 @@ namespace CandlePatternML
             var lastSessionDates = sessionDates.TakeLast(dayCount).ToHashSet();
             List<Candle> windowed = candles.Where(c => lastSessionDates.Contains(c.dtDotNet.Date)).ToList();
 
-            return Studies.ComputeFullVolumeProfileForPreviousDays(windowed, binSizeInPennies, percentile);
+            return Studies.ComputeFullVolumeProfileForPreviousDays(windowed, binSizeInPennies, true, percentile);
         }
     }
 }

@@ -1,4 +1,5 @@
 ﻿using CandlePatternML;
+using SchwabLib;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -35,7 +36,8 @@ namespace PatternTrainer
             MLResult ml3BarResults, 
             MLResult ml4BarResults,
             MLResult ml5BarResults,
-            MLResult RSI4Results
+            MLResult RSI4Results,
+            List<Studies.VolumeProfileResult> volProfilesLastDays
             )
         {
             Rows.Add( new WorkSheetRowData { 
@@ -45,7 +47,8 @@ namespace PatternTrainer
                 ml3BarResults = ml3BarResults,
                 ml4BarResults = ml4BarResults,
                 ml5BarResults = ml5BarResults,
-                RSI4Results = RSI4Results
+                RSI4Results = RSI4Results,
+                volProfilesLastDays = volProfilesLastDays
             } );
         }   
     }
@@ -58,6 +61,7 @@ namespace PatternTrainer
         public MLResult ml4BarResults { get; set; }
         public MLResult ml5BarResults { get; set; }
         public MLResult RSI4Results { get; set; }
+        public List<Studies.VolumeProfileResult> volProfilesLastDays { get; set; }
 
     }
 }

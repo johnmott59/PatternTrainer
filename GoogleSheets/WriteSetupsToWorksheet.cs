@@ -20,6 +20,7 @@ namespace CandlePatternML
          credentialsPath: "C:\\Users\\johnm\\source\\repos\\MLPatterns\\PatternTrainer\\credentials.json"
      );
 
+            StreamWriter sw = new StreamWriter("c:\\work\\VolProfileList.txt");
             // Create and populate your worksheet
             var worksheet = new WorkSheet("Sheet1");
             foreach (var v in results.Headers)
@@ -45,6 +46,47 @@ namespace CandlePatternML
                     ) continue;
                 
                 worksheet.SetValue(rowindex, "A",v.Ticker);
+
+                // get the vol profiles
+                var vp = v.volProfilesLastDays;
+                List<double> POClist = new List<double>();
+                foreach (var v2 in vp)
+                {
+                    POClist.Add(v2.POC);
+                }
+                // working backwards, count the number of consecutive up or down days. this will help screen tickers that are recently moving.
+
+                int count = 0;
+                POClist.Reverse();
+
+                if (POClist.Count >= 2)
+                {
+                    if (POClist[0] > POClist[1])
+                    {
+                        count = 1;
+                        for (int n = 1; n < POClist.Count - 1; n++)
+                        {
+                            if (POClist[n] > POClist[n + 1])
+                                count++;
+                            else
+                                break;
+                        }
+                    }
+                    else if (POClist[0] < POClist[1])
+                    {
+                        count = -1;
+                        for (int n = 1; n < POClist.Count - 1; n++)
+                        {
+                            if (POClist[n] < POClist[n + 1])
+                                count--;
+                            else
+                                break;
+                        }
+                    }
+                }
+
+                // save this count to a file
+                sw.WriteLine($"{v.Ticker}: {count}");
 
                 /*
                  * If there is a high trend line see if we have either break of the line
@@ -89,7 +131,8 @@ namespace CandlePatternML
                 }
                 rowindex++;
             }
- 
+
+            sw.Close();
 
             // Synchronize to Google Sheets
             bool success = googleSync.Synchronize(worksheet);
