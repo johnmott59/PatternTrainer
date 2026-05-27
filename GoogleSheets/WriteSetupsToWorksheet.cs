@@ -47,43 +47,8 @@ namespace CandlePatternML
                 
                 worksheet.SetValue(rowindex, "A",v.Ticker);
 
-                // get the vol profiles
-                var vp = v.volProfilesLastDays;
-                List<double> POClist = new List<double>();
-                foreach (var v2 in vp)
-                {
-                    POClist.Add(v2.POC);
-                }
-                // working backwards, count the number of consecutive up or down days. this will help screen tickers that are recently moving.
-
-                int count = 0;
-                POClist.Reverse();
-
-                if (POClist.Count >= 2)
-                {
-                    if (POClist[0] > POClist[1])
-                    {
-                        count = 1;
-                        for (int n = 1; n < POClist.Count - 1; n++)
-                        {
-                            if (POClist[n] > POClist[n + 1])
-                                count++;
-                            else
-                                break;
-                        }
-                    }
-                    else if (POClist[0] < POClist[1])
-                    {
-                        count = -1;
-                        for (int n = 1; n < POClist.Count - 1; n++)
-                        {
-                            if (POClist[n] < POClist[n + 1])
-                                count--;
-                            else
-                                break;
-                        }
-                    }
-                }
+                // Calculate consecutive POC trend days (positive = up trend, negative = down trend)
+                int count = CalculateConsecutivePOCDays(v.volProfilesLastDays);
 
                 // save this count to a file
                 sw.WriteLine($"{v.Ticker}: {count}");
