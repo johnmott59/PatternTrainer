@@ -110,6 +110,9 @@ namespace CandlePatternML
                 List<Studies.VolumeProfileResult> volProfilesLastDays = ComputeVolumeProfilesLastFiveDays(ticker);
                 Console.WriteLine($"  volume profiles (last completed sessions): {volProfilesLastDays.Count}");
 
+                int consecutivePOCDays = CalculateConsecutivePOCDays(volProfilesLastDays);
+                Console.WriteLine($"  consecutive POC trend days: {consecutivePOCDays}");
+
                 // Save these to models to the database
                 SaveModelsToDatabase(ticker,DateTime.Now, DemarkPivots, resultTwoBar, resultThreeBar, resultFourBar, resultFiveBar, resultRSI4);
 
