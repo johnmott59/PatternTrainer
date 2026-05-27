@@ -55,6 +55,8 @@ namespace CandlePatternML
 
             SetupWorkSheetModel oSetupWorkSheetModel = new SetupWorkSheetModel();
 
+            StreamWriter swVolProfile = new StreamWriter("c:\\work\\volprofile.txt");
+
             foreach (var tdm in oTickerListWorksheetModel.RowDataList) //.Where(m=>m.Ticker == "NVRI"))
             {
                 string ticker = tdm.Ticker;
@@ -113,6 +115,12 @@ namespace CandlePatternML
                 int consecutivePOCDays = CalculateConsecutivePOCDays(volProfilesLastDays);
                 Console.WriteLine($"  consecutive POC trend days: {consecutivePOCDays}");
 
+                // Save significant volume profile trends (3+ consecutive days in same direction)
+                if (consecutivePOCDays >= 3 || consecutivePOCDays <= -3)
+                {
+                    swVolProfile.WriteLine($"{ticker},{consecutivePOCDays}");
+                }
+
                 // Save these to models to the database
                 SaveModelsToDatabase(ticker,DateTime.Now, DemarkPivots, resultTwoBar, resultThreeBar, resultFourBar, resultFiveBar, resultRSI4);
 
@@ -120,6 +128,8 @@ namespace CandlePatternML
                 oSetupWorkSheetModel.AddTicker(ticker,DemarkPivots,resultTwoBar,resultThreeBar,resultFourBar,resultFiveBar,resultRSI4, volProfilesLastDays);
 
             }
+
+            swVolProfile.Close();
 
             /*
              * Generate PNG files for the matching patterns
