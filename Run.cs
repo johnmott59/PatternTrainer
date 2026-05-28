@@ -118,7 +118,7 @@ namespace CandlePatternML
                 // Save significant volume profile trends (3+ consecutive days in same direction)
                 if (consecutivePOCDays >= 3 || consecutivePOCDays <= -3)
                 {
-                    swVolProfile.WriteLine($"{ticker},{consecutivePOCDays}");
+                    swVolProfile.WriteLine($"{ticker}");
                 }
 
                 // Save these to models to the database
